@@ -125,7 +125,7 @@ jobs:
         find "${GITHUB_WORKSPACE}"/sfml/install/lib/ -name "*.dll" -o -name "*.so" -o -name "*.dylib" -exec cp -v {} "${GITHUB_WORKSPACE}"/artifacts/ \;
         cp am/attract* "${GITHUB_WORKSPACE}"/artifacts/
         cp -R am/config/* "${GITHUB_WORKSPACE}"/artifacts/
-        7z a "attract-${{matrix.platform.name}}-${{matrix.config.name}}-x86_64.7z" ./artifacts/*
+        7z a "attract-${{matrix.platform.name}}-${{matrix.config.name}}.7z" ./artifacts/*
 
     - name: Prepare macOS artifacts
       if: runner.os == 'macOS'
@@ -133,7 +133,7 @@ jobs:
         git -C am/ fetch --unshallow
         mkdir -p "${GITHUB_WORKSPACE}"/artifacts
         bash am/util/osx/appbuilder.sh
-        7z a "attract-${{matrix.platform.name}}-${{matrix.config.name}}-x86_64.7z" ./artifacts/*
+        7z a "attract-${{matrix.platform.name}}-${{matrix.config.name}}.7z" ./artifacts/*
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
@@ -191,7 +191,7 @@ jobs:
         mkdir -p "${GITHUB_WORKSPACE}"/artifacts
         find "${GITHUB_WORKSPACE}"/sfml/install/lib/ -name "*.so" -exec cp {} "${GITHUB_WORKSPACE}"/artifacts/ \;
         cp am/attract* "${GITHUB_WORKSPACE}"/artifacts/
-        7z a "attract-${{matrix.platform.name}}-${{matrix.config.name}}-x86_64.7z" ./artifacts/*
+        7z a "attract-${{matrix.platform.name}}-${{matrix.config.name}}.7z" ./artifacts/*
 
     - name: AM+ - Upload binary
       uses: actions/upload-artifact@v3
