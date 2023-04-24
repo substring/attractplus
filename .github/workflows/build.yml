@@ -124,8 +124,8 @@ jobs:
         done
         find "${GITHUB_WORKSPACE}"/sfml/install/lib/ -name "*.dll" -o -name "*.so" -o -name "*.dylib" -exec cp -v {} "${GITHUB_WORKSPACE}"/artifacts/ \;
         cp am/attract* "${GITHUB_WORKSPACE}"/artifacts/
-        cp -R am/config "${GITHUB_WORKSPACE}"/artifacts/
-        7z a "attract-${{matrix.platform.name}}-${{matrix.config.name}}-x86_64.7z" artifacts/*
+        cp -R am/config/* "${GITHUB_WORKSPACE}"/artifacts/
+        #7z a "attract-${{matrix.platform.name}}-${{matrix.config.name}}-x86_64.7z" artifacts/*
 
     - name: Prepare macOS artifacts
       if: runner.os == 'macOS'
@@ -133,13 +133,14 @@ jobs:
         git -C am/ fetch --unshallow
         mkdir -p "${GITHUB_WORKSPACE}"/artifacts
         bash am/util/osx/appbuilder.sh
-        7z a "attract-${{matrix.platform.name}}-${{matrix.config.name}}-x86_64.7z" artifacts
+        #7z a "attract-${{matrix.platform.name}}-${{matrix.config.name}}-x86_64.7z" artifacts
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
         name: ${{matrix.platform.name}}-${{matrix.config.name}}
-        path: attract-*.7z
+        #path: attract-*.7z
+        path: artifacts/*
 
 
   buildARM:
@@ -191,13 +192,14 @@ jobs:
         mkdir -p "${GITHUB_WORKSPACE}"/artifacts
         find "${GITHUB_WORKSPACE}"/sfml/install/lib/ -name "*.so" -exec cp {} "${GITHUB_WORKSPACE}"/artifacts/ \;
         cp am/attract* "${GITHUB_WORKSPACE}"/artifacts/
-        7z a "attract-${{matrix.platform.name}}-${{matrix.config.name}}-x86_64.7z" artifacts/*
+        #7z a "attract-${{matrix.platform.name}}-${{matrix.config.name}}-x86_64.7z" artifacts/*
 
     - name: AM+ - Upload binary
       uses: actions/upload-artifact@v3
       with:
         name: Linux-${{matrix.platform.name}}-${{matrix.config.name}}
-        path: attract-*.7z
+        #path: attract-*.7z
+        path: artifacts/*
 
   Release:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
@@ -207,7 +209,7 @@ jobs:
 
     steps:
     - name: Download all artifacts
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         path: artifacts
 
@@ -216,6 +218,7 @@ jobs:
       run: |
         tag="${GITHUB_REF#refs/*/}"
         echo "::set-output name=current_tag::${tag}"
+        echo "current_tag::${tag}" >> $GITHUB_OUTPUT
         mkdir -p "${GITHUB_WORKSPACE}"/artifacts_for_release
         find "${GITHUB_WORKSPACE}"/artifacts/ -name "*.7z" | while read f ; do 
           p="$(basename "$f")"
