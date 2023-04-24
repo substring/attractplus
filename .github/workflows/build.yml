@@ -21,7 +21,7 @@ jobs:
         #- platform: { name: MacOS XCode, os: macos-latest }
         #  config: { name: Frameworks, flags: -DSFML_BUILD_FRAMEWORKS=TRUE }
         include:
-        - platform: { name: Windows 64bits }
+        - platform: { name: Windows x64 }
           config: { name: static }
           specifific_flags: -DCMAKE_CXX_FLAGS="-DAL_LIBTYPE_STATIC=TRUE"
         exclude:
