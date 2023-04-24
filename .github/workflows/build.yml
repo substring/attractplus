@@ -37,7 +37,7 @@ jobs:
         path: am
 
     - name: Install Linux Dependencies
-      if: runner.os == 'Linux' && matrix.platform.name != 'Windows 64bits'
+      if: runner.os == 'Linux' && matrix.platform.name != 'Windows x64'
       run: |
         sudo apt-get update
         sudo apt-get install pkgconf libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libavformat-dev libfontconfig1-dev libfreetype6-dev libswscale-dev libswresample-dev libarchive-dev libjpeg-dev libglu1-mesa-dev libegl1-mesa-dev libdrm-dev libcurl4-gnutls-dev
