@@ -10,9 +10,9 @@ jobs:
     strategy:
       matrix:
         platform:
-        - { name: Windows MXE, os: ubuntu-20.04, crossprefix: x86_64-w64-mingw32.static-, amosflags: CROSS=1 FE_WINDOWS_COMPILE=1 }
-        - { name: Linux GCC,   os: ubuntu-20.04, flags: -DSFML_USE_DRM=1,                 amosflags: USE_DRM=1 }
-        - { name: MacOS XCode, os: macos-11,  flags: -DSFML_USE_SYSTEM_DEPS=1 }
+        - { name: Windows 64bits, os: ubuntu-20.04, crossprefix: x86_64-w64-mingw32.static-, amosflags: CROSS=1 FE_WINDOWS_COMPILE=1 }
+        - { name: Linux 6bits,   os: ubuntu-20.04, flags: -DSFML_USE_DRM=1,                 amosflags: USE_DRM=1 }
+        - { name: MacOS, os: macos-11,  flags: -DSFML_USE_SYSTEM_DEPS=1 }
         config:
         - { name: shared, flags: -DBUILD_SHARED_LIBS=TRUE }
         - { name: static, flags: -DBUILD_SHARED_LIBS=FALSE, amflags: STATIC=1 }
@@ -233,4 +233,4 @@ jobs:
         name: Attract Mode ${{ steps.prepare_artifacts.outputs.current_tag }}
         draft: true
         prerelease: false
-        files: artifacts_for_release/attract-*.7z
+        files: artifacts_for_release/attract-*.zip
