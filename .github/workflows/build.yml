@@ -10,8 +10,8 @@ jobs:
     strategy:
       matrix:
         platform:
-        - { name: Windows 64bits, os: ubuntu-20.04, crossprefix: x86_64-w64-mingw32.static-, amosflags: CROSS=1 FE_WINDOWS_COMPILE=1 }
-        - { name: Linux 64bits,   os: ubuntu-20.04, flags: -DSFML_USE_DRM=1,                 amosflags: USE_DRM=1 }
+        - { name: Windows x64, os: ubuntu-20.04, crossprefix: x86_64-w64-mingw32.static-, amosflags: CROSS=1 FE_WINDOWS_COMPILE=1 }
+        - { name: Linux x64,   os: ubuntu-20.04, flags: -DSFML_USE_DRM=1,                 amosflags: USE_DRM=1 }
         - { name: MacOS, os: macos-11,  flags: -DSFML_USE_SYSTEM_DEPS=1 }
         config:
         - { name: shared, flags: -DBUILD_SHARED_LIBS=TRUE }
@@ -43,7 +43,7 @@ jobs:
         sudo apt-get install pkgconf libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libavformat-dev libfontconfig1-dev libfreetype6-dev libswscale-dev libswresample-dev libarchive-dev libjpeg-dev libglu1-mesa-dev libegl1-mesa-dev libdrm-dev libcurl4-gnutls-dev
 
     - name: Install Linux MXE for Windows cross-building
-      if: matrix.platform.name == 'Windows 64bits'
+      if: matrix.platform.name == 'Windows x64'
       run: |
         sudo apt-get install \
           software-properties-common \
@@ -105,7 +105,7 @@ jobs:
         #~ echo "AR=/usr/local/bin/ar-10" >> $GITHUB_ENV
 
     - name: AM+ - Build attract-console.exe
-      if: matrix.platform.name == 'Windows MXE'
+      if: matrix.platform.name == 'Windows x64'
       run: |
         make -C am smallclean
         make -C am -j$(nproc) WINDOWS_CONSOLE=1 ${{matrix.platform.amosflags}} ${{matrix.config.amflags}} ${{env.cross_toolchain}}
