@@ -98,8 +98,8 @@ int fe_get_num_params(
 	sq_pushobject( vm, func );
 	sq_pushobject( vm, env );
 
-	SQUnsignedInteger nparams( 0 );
-	SQUnsignedInteger nfreevars( 0 );
+	SQInteger nparams( 0 );
+	SQInteger nfreevars( 0 );
 	sq_getclosureinfo( vm, -2, &nparams, &nfreevars );
 
 	sq_pop(vm, 2);

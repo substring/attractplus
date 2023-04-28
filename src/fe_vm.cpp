@@ -665,7 +665,8 @@ bool FeVM::on_new_layout()
 	// Base Presentable Object Class
 	//
 	fe.Bind( _SC("Presentable"),
-		Class<FeBasePresentable, NoConstructor>()
+		//Class<FeBasePresentable, Sqrat::NoConstructor<FeBasePresentable>>()
+		Class<FeBasePresentable, NoConstructor<FeBasePresentable>>(Sqrat::DefaultVM::Get(), _SC("Presentable"), false)
 		.Prop(_SC("visible"),
 			&FeBasePresentable::get_visible, &FeBasePresentable::set_visible )
 		.Prop(_SC("x"), &FeBasePresentable::get_x, &FeBasePresentable::set_x )
@@ -690,7 +691,7 @@ bool FeVM::on_new_layout()
 	);
 
 	fe.Bind( _SC("Image"),
-		DerivedClass<FeImage, FeBasePresentable, NoConstructor>()
+		DerivedClass<FeImage, FeBasePresentable, NoConstructor<FeBasePresentable>>(Sqrat::DefaultVM::Get(), _SC("Image"))
 		.Prop(_SC("origin_x"), &FeImage::get_origin_x, &FeImage::set_origin_x )
 		.Prop(_SC("origin_y"), &FeImage::get_origin_y, &FeImage::set_origin_y )
 		.Prop(_SC("anchor"), &FeImage::get_anchor_type, &FeImage::set_anchor_type )
@@ -746,7 +747,7 @@ bool FeVM::on_new_layout()
 	);
 
 	fe.Bind( _SC("Text"),
-		DerivedClass<FeText, FeBasePresentable, NoConstructor>()
+		DerivedClass<FeText, FeBasePresentable, NoConstructor<FeBasePresentable>>(Sqrat::DefaultVM::Get(), _SC("Text"))
 		.Prop(_SC("msg"), &FeText::get_string, &FeText::set_string )
 		.Prop(_SC("msg_wrapped"), &FeText::get_string_wrapped )
 		.Prop(_SC("bg_red"), &FeText::get_bgr, &FeText::set_bgr )
@@ -777,7 +778,7 @@ bool FeVM::on_new_layout()
 	);
 
 	fe.Bind( _SC("ListBox"),
-		DerivedClass<FeListBox, FeBasePresentable, NoConstructor>()
+		DerivedClass<FeListBox, FeBasePresentable, NoConstructor<FeBasePresentable>>(Sqrat::DefaultVM::Get(), _SC("ListBox"))
 		.Prop(_SC("bg_red"), &FeListBox::get_bgr, &FeListBox::set_bgr )
 		.Prop(_SC("bg_green"), &FeListBox::get_bgg, &FeListBox::set_bgg )
 		.Prop(_SC("bg_blue"), &FeListBox::get_bgb, &FeListBox::set_bgb )
@@ -810,7 +811,7 @@ bool FeVM::on_new_layout()
 		.Func( _SC("set_selbg_rgb"), &FeListBox::set_selbg_rgb )
 	);
 
-	fe.Bind( _SC("Rectangle"), DerivedClass<FeRectangle, FeBasePresentable, NoConstructor>()
+	fe.Bind( _SC("Rectangle"), DerivedClass<FeRectangle, FeBasePresentable, NoConstructor<FeBasePresentable>>(Sqrat::DefaultVM::Get(), _SC("Rectangle"))
 		.Prop(_SC("origin_x"), &FeRectangle::get_origin_x, &FeRectangle::set_origin_x )
 		.Prop(_SC("origin_y"), &FeRectangle::get_origin_y, &FeRectangle::set_origin_y )
 		.Prop(_SC("anchor"), &FeRectangle::get_anchor_type, &FeRectangle::set_anchor_type )
@@ -827,7 +828,7 @@ bool FeVM::on_new_layout()
 
 	);
 
-	fe.Bind( _SC("LayoutGlobals"), Class <FePresent, NoConstructor>()
+	fe.Bind( _SC("LayoutGlobals"), Class <FePresent, NoConstructor<FePresent>>(Sqrat::DefaultVM::Get(), _SC("LayoutGlobals"), false)
 		.Prop( _SC("width"), &FePresent::get_layout_width, &FePresent::set_layout_width )
 		.Prop( _SC("height"), &FePresent::get_layout_height, &FePresent::set_layout_height )
 		.Prop( _SC("font"), &FePresent::get_layout_font, &FePresent::set_layout_font )
@@ -842,7 +843,7 @@ bool FeVM::on_new_layout()
 		.Func(_SC("redraw"), &FePresent::redraw )
 	);
 
-	fe.Bind( _SC("CurrentList"), Class <FePresent, NoConstructor>()
+	fe.Bind( _SC("CurrentList"), Class <FePresent, NoConstructor<FePresent>>(Sqrat::DefaultVM::Get(), _SC("CurrentList"), false)
 		.Prop( _SC("name"), &FePresent::get_display_name )
 		.Prop( _SC("display_index"), &FePresent::get_display_index )
 		.Prop( _SC("index"), &FePresent::get_selection_index, &FePresent::set_selection_index )
@@ -858,7 +859,7 @@ bool FeVM::on_new_layout()
 		.Prop( _SC("list_limit"), &FePresent::get_list_limit ) // deprecated as of 1.5
 	);
 
-	fe.Bind( _SC("Overlay"), Class <FeVM, NoConstructor>()
+	fe.Bind( _SC("Overlay"), Class <FeVM, NoConstructor<FeVM>>(Sqrat::DefaultVM::Get(), _SC("Overlay"), false)
 		.Prop( _SC("is_up"), &FeVM::overlay_is_on )
 		.Overload<void (FeVM::*)(FeText *, FeListBox *)>(_SC("set_custom_controls"), &FeVM::overlay_set_custom_controls)
 		.Overload<void (FeVM::*)(FeText *)>(_SC("set_custom_controls"), &FeVM::overlay_set_custom_controls)
@@ -874,7 +875,7 @@ bool FeVM::on_new_layout()
 		.Overload<bool (FeVM::*)(const char *)>( _SC("splash_message"), &FeVM::splash_message )
 	);
 
-	fe.Bind( _SC("Sound"), Class <FeSound, NoConstructor>()
+	fe.Bind( _SC("Sound"), Class <FeSound, NoConstructor<FeSound>>(Sqrat::DefaultVM::Get(), _SC("Sound"), false)
 		.Prop( _SC("file_name"), &FeSound::get_file_name, &FeSound::set_file_name )
 		.Prop( _SC("playing"), &FeSound::get_playing, &FeSound::set_playing )
 		.Prop( _SC("loop"), &FeSound::get_loop, &FeSound::set_loop )
@@ -887,7 +888,7 @@ bool FeVM::on_new_layout()
 		.Func( _SC("get_metadata"), &FeSound::get_metadata )
 	);
 
-	fe.Bind( _SC("Shader"), Class <FeShader, NoConstructor>()
+	fe.Bind( _SC("Shader"), Class <FeShader, NoConstructor<FeShader>>(Sqrat::DefaultVM::Get(), _SC("Shader"), false)
 		.Prop( _SC("type"), &FeShader::get_type )
 		.Overload<void (FeShader::*)(const char *, float)>(_SC("set_param"), &FeShader::set_param)
 		.Overload<void (FeShader::*)(const char *, float, float)>(_SC("set_param"), &FeShader::set_param)
@@ -897,7 +898,7 @@ bool FeVM::on_new_layout()
 		.Overload<void (FeShader::*)(const char *, FeImage *)>( _SC("set_texture_param"), &FeShader::set_texture_param )
 	);
 
-	fe.Bind( _SC("Display"), Class <FeDisplayInfo, NoConstructor>()
+	fe.Bind( _SC("Display"), Class <FeDisplayInfo, NoConstructor<FeDisplayInfo>>(Sqrat::DefaultVM::Get(), _SC("Display"), false)
 		.Prop( _SC("name"), &FeDisplayInfo::get_name )
 		.Prop( _SC("layout"), &FeDisplayInfo::get_layout )
 		.Prop( _SC("romlist"), &FeDisplayInfo::get_romlist_name )
@@ -905,7 +906,7 @@ bool FeVM::on_new_layout()
 		.Prop( _SC("in_menu"), &FeDisplayInfo::show_in_menu )
 	);
 
-	fe.Bind( _SC("Filter"), Class <FeFilter, NoConstructor>()
+	fe.Bind( _SC("Filter"), Class <FeFilter, NoConstructor<FeFilter>>(Sqrat::DefaultVM::Get(), _SC("Filter"), false)
 		.Prop( _SC("name"), &FeFilter::get_name )
 		.Prop( _SC("index"), &FeFilter::get_rom_index )
 		.Prop( _SC("size"), &FeFilter::get_size )
@@ -914,7 +915,7 @@ bool FeVM::on_new_layout()
 		.Prop( _SC("list_limit"), &FeFilter::get_list_limit )
 	);
 
-	fe.Bind( _SC("PresentableParent"), Class <FePresentableParent, NoConstructor>()
+	fe.Bind( _SC("PresentableParent"), Class <FePresentableParent, NoConstructor<FePresentableParent>>(Sqrat::DefaultVM::Get(), _SC("PresentableParent"), false)
 		.Overload<FeImage * (FePresentableParent::*)(const char *, float, float, float, float)>(_SC("add_image"), &FePresentableParent::add_image)
 		.Overload<FeImage * (FePresentableParent::*)(const char *, float, float)>(_SC("add_image"), &FePresentableParent::add_image)
 		.Overload<FeImage * (FePresentableParent::*)(const char *)>(_SC("add_image"), &FePresentableParent::add_image)
@@ -929,13 +930,13 @@ bool FeVM::on_new_layout()
 	);
 
 	fe.Bind( _SC("Monitor"),
-		DerivedClass<FeMonitor, FePresentableParent, NoConstructor>()
+		DerivedClass<FeMonitor, FePresentableParent, NoConstructor<FePresentableParent>>(Sqrat::DefaultVM::Get(), _SC("Monitor"))
 		.Prop( _SC("num"), &FeMonitor::get_num )
 		.Prop( _SC("width"), &FeMonitor::get_width )
 		.Prop( _SC("height"), &FeMonitor::get_height )
 	);
 
-	fe.Bind( _SC("ImageCache"), Class <FeImageLoader, NoConstructor>()
+	fe.Bind( _SC("ImageCache"), Class <FeImageLoader, NoConstructor<FeImageLoader>>(Sqrat::DefaultVM::Get(), _SC("ImageCache"))
 		.Prop( _SC("max_size"), &FeImageLoader::cache_max )
 		.Prop( _SC("size"), &FeImageLoader::cache_size )
 		.Prop( _SC("count"), &FeImageLoader::cache_count )
@@ -1283,10 +1284,10 @@ void FeVM::on_transition(
 				Function &func = (*itr)->get_fn();
 				if ( !func.IsNull() )
 				{
-					keep = func.Evaluate<bool>(
+					keep = *func.Evaluate<bool>(
 						(int)t,
 						var,
-						ttime );
+						ttime ) ? true : false;
 				}
 			}
 			catch( const Exception &e )
@@ -1353,7 +1354,7 @@ bool FeVM::script_handle_event( FeInputMap::Command c )
 		{
 			Function &func = (*itr).get_fn();
 			if (( !func.IsNull() )
-					&& ( func.Evaluate<bool>( FeInputMap::commandStrings[ c ] )))
+					&& ( *func.Evaluate<bool>( FeInputMap::commandStrings[ c ] )))
 				return true;
 		}
 		catch( const Exception &e )
@@ -1510,13 +1511,13 @@ void FePresent::script_process_magic_strings( std::string &str,
 				switch ( fe_get_num_params( vm, func.GetFunc(), func.GetEnv() ) )
 				{
 				case 2:
-					result = func.Evaluate<const char *>( index_offset, filter_offset );
+					result = *func.Evaluate<const char *>( index_offset, filter_offset );
 					break;
 				case 1:
-					result = func.Evaluate<const char *>( index_offset );
+					result = *func.Evaluate<const char *>( index_offset );
 					break;
 				default:
-					result = func.Evaluate<const char *>();
+					result = *func.Evaluate<const char *>();
 					break;
 				}
 
@@ -1612,7 +1613,7 @@ public:
 			// We only expose a very limited set of frontend functionality
 			// to scripts when they are run in the config mode
 			//
-			fe.Bind( _SC("Overlay"), Sqrat::Class <FeVM, Sqrat::NoConstructor>()
+			fe.Bind( _SC("Overlay"), Sqrat::Class <FeVM, Sqrat::NoConstructor<FeVM>>(Sqrat::DefaultVM::Get(), _SC("Overlay"), false)
 				.Prop( _SC("is_up"), &FeVM::overlay_is_on )
 				.Overload<bool (FeVM::*)(const char *, const char *)>( _SC("splash_message"), &FeVM::splash_message )
 				.Overload<bool (FeVM::*)(const char *)>( _SC("splash_message"), &FeVM::splash_message )
@@ -1620,7 +1621,7 @@ public:
 
 			fe.SetInstance( _SC("overlay"), fe_vm );
 
-			fe.Bind( _SC("Display"), Sqrat::Class <FeDisplayInfo, Sqrat::NoConstructor>()
+			fe.Bind( _SC("Display"), Sqrat::Class <FeDisplayInfo, Sqrat::NoConstructor<FeDisplayInfo>>(Sqrat::DefaultVM::Get(), _SC("Display"), false)
 				.Prop( _SC("name"), &FeDisplayInfo::get_name )
 				.Prop( _SC("layout"), &FeDisplayInfo::get_layout )
 				.Prop( _SC("romlist"), &FeDisplayInfo::get_romlist_name )
@@ -1628,7 +1629,7 @@ public:
 				.Prop( _SC("in_menu"), &FeDisplayInfo::show_in_menu )
 			);
 
-			fe.Bind( _SC("Filter"), Sqrat::Class <FeFilter, Sqrat::NoConstructor>()
+			fe.Bind( _SC("Filter"), Sqrat::Class <FeFilter, Sqrat::NoConstructor<FeFilter>>(Sqrat::DefaultVM::Get(), _SC("Filter"), false)
 				.Prop( _SC("name"), &FeFilter::get_name )
 				.Prop( _SC("index"), &FeFilter::get_rom_index )
 				.Prop( _SC("size"), &FeFilter::get_size )
@@ -1637,7 +1638,7 @@ public:
 				.Prop( _SC("list_limit"), &FeFilter::get_list_limit )
 			);
 
-			fe.Bind( _SC("Monitor"), Sqrat::Class <FeMonitor, Sqrat::NoConstructor>()
+			fe.Bind( _SC("Monitor"), Sqrat::Class <FeMonitor, Sqrat::NoConstructor<FeMonitor>>(Sqrat::DefaultVM::Get(), _SC("Monitor"), false)
 				.Prop( _SC("num"), &FeMonitor::get_num )
 				.Prop( _SC("width"), &FeMonitor::get_width )
 				.Prop( _SC("height"), &FeMonitor::get_height )
@@ -1737,7 +1738,7 @@ void FeVM::script_run_config_function(
 		const char *help_msg = NULL;
 		try
 		{
-			help_msg = func.Evaluate<const char *>( cb_get_config() );
+			help_msg = *func.Evaluate<const char *>( cb_get_config() );
 		}
 		catch( const Sqrat::Exception &e )
 		{
