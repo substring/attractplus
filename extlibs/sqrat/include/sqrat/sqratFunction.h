@@ -110,8 +110,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 1)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -138,8 +138,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 2)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -168,8 +168,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 3)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -199,8 +199,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 4)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -231,8 +231,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 5)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -265,8 +265,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 6)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -299,8 +299,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 7)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -334,8 +334,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 8)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -370,8 +370,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 9)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -407,8 +407,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 10)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -445,8 +445,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 11)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -484,8 +484,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 12)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -524,8 +524,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 13)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -565,8 +565,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 14)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -607,8 +607,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 15)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -653,8 +653,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 1)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -674,8 +674,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 2)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -697,8 +697,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 3)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -721,8 +721,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 4)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -746,8 +746,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 5)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -773,8 +773,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 6)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -800,8 +800,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 7)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -828,8 +828,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 8)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -857,8 +857,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 9)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -887,8 +887,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 10)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -918,8 +918,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 11)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -950,8 +950,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 12)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -983,8 +983,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 13)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -1017,8 +1017,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 14)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));
@@ -1052,8 +1052,8 @@ public:
         sq_pushobject(vm, obj);
         sq_pushobject(vm, env);
 
-        SQUnsignedInteger nparams;
-        SQUnsignedInteger nfreevars;
+        SQInteger nparams;
+        SQInteger nfreevars;
         if (SQ_SUCCEEDED(sq_getclosureinfo(vm, -2, &nparams, &nfreevars)) && (nparams != 15)) {
             sq_pop(vm, 2);
             throw Exception(_SC("wrong number of parameters"));

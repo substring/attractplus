@@ -140,7 +140,7 @@ struct ClassType {
         ClassTypeDataBase* classType = getClassTypeData(vm);
         if (classType != 0) /* type checking only done if the value has type data else it may be enum */
         {
-            if (SQ_FAILED(sq_getinstanceup(vm, idx, &ptr, classType))) {
+            if (SQ_FAILED(sq_getinstanceup(vm, idx, &ptr, classType, SQTrue))) {
                 Error::Instance().Throw(vm, Sqrat::Error::FormatTypeError(vm, idx, ClassName(vm)));
                 return NULL;
             }

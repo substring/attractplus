@@ -123,7 +123,7 @@ public:
     SQUserPointer GetInstanceUP(SQUserPointer tag = NULL) const {
         SQUserPointer up;
         sq_pushobject(vm, GetObject());
-        sq_getinstanceup(vm, -1, &up, tag);
+        sq_getinstanceup(vm, -1, &up, tag, SQTrue);
         sq_pop(vm, 1);
         return up;
     }
