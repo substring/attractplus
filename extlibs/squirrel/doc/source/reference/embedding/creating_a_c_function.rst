@@ -23,7 +23,7 @@ When the function is called, the stackbase is the first parameter of the functio
 top is the last. In order to return a value the function has to push it in the stack and
 return 1.
 
-Function parameters are in the stack from postion 1 ('this') to *n*.
+Function parameters are in the stack from position 1 ('this') to *n*.
 *sq_gettop()* can be used to determinate the number of parameters.
 
 If the function has free variables, those will be in the stack after the explicit parameters
@@ -99,7 +99,8 @@ Here an example of how to register a function::
     {
         sq_pushroottable(v);
         sq_pushstring(v,fname,-1);
-        sq_newclosure(v,f,0,0); //create a new function
+        sq_newclosure(v,f,0); //create a new function
         sq_newslot(v,-3,SQFalse);
         sq_pop(v,1); //pops the root table
+        return 0;
     }

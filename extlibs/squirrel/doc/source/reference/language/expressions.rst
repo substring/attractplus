@@ -221,10 +221,10 @@ Bitwise Operators
     exp:= 'exp' op 'exp'
     exp := '~' exp
 
-Squirrel supports the standard c-like bit wise operators ``&, |, ^, ~, <<, >>`` plus the unsigned
-right shift operator ``<<<``. The unsigned right shift works exactly like the normal right shift operator(``<<``)
+Squirrel supports the standard C-like bitwise operators ``&, |, ^, ~, <<, >>`` plus the unsigned
+right shift operator ``>>>``. The unsigned right shift works exactly like the normal right shift operator(``>>``)
 except for treating the left operand as an unsigned integer, so is not affected by the sign. Those operators
-only work on integers values, passing of any other operand type to these operators will
+only work on integer values; passing of any other operand type to these operators will
 cause an exception.
 
 ^^^^^^^^^^^^^^^^^^^^^
@@ -243,7 +243,7 @@ Operators precedence
 +---------------------------------------+-----------+
 | ``<<, >>, >>>``                       |           |
 +---------------------------------------+-----------+
-| ``<, <=, >, >=``                      |           |
+| ``<, <=, >, >=, instanceof``          |           |
 +---------------------------------------+-----------+
 | ``==, !=, <=>``                       |           |
 +---------------------------------------+-----------+
@@ -253,12 +253,12 @@ Operators precedence
 +---------------------------------------+-----------+
 | ``&&, in``                            |           |
 +---------------------------------------+-----------+
-| ``+=, =, -=``                         | ...       |
+| ``+=, =, -=, /=, *=, %=``             | ...       |
 +---------------------------------------+-----------+
-| ``,(comma operator)``                 | lowest    |
+| ``, (comma operator)``                | lowest    |
 +---------------------------------------+-----------+
 
-.. _table_contructor:
+.. _table_constructor:
 
 -----------------
 Table Constructor
@@ -293,7 +293,7 @@ A new slot with exp1 as key and exp2 as value is created::
         [1]="I'm the value"
     }
 
-both syntaxes can be mixed::
+Both syntaxes can be mixed::
 
     local table=
     {
@@ -369,6 +369,6 @@ Creates a new array.::
 
     a <- [] //creates an empty array
 
-arrays can be initialized with values during the construction::
+Arrays can be initialized with values during the construction::
 
     a <- [1,"string!",[],{}] //creates an array with 4 elements
