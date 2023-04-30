@@ -21,20 +21,20 @@ Global Symbols
     returns the value returned by the script or null if no value is returned.
     if the optional parameter 'raiseerror' is true, the compiler error handler is invoked
     in case of a syntax error. If raiseerror is omitted or set to false, the compiler
-    error handler is not ivoked.
-    When squirrel is compiled in unicode mode the function can handle different character ecodings,
+    error handler is not invoked.
+    When squirrel is compiled in Unicode mode the function can handle different character encodings,
     UTF8 with and without prefix and UCS-2 prefixed(both big endian an little endian).
-    If the source stream is not prefixed UTF8 ecoding is used as default.
+    If the source stream is not prefixed UTF8 encoding is used as default.
 
 .. js:function:: loadfile(path, [raiseerror])
 
     compiles a squirrel script or loads a precompiled one an returns it as as function.
     if the optional parameter 'raiseerror' is true, the compiler error handler is invoked
     in case of a syntax error. If raiseerror is omitted or set to false, the compiler
-    error handler is not ivoked.
-    When squirrel is compiled in unicode mode the function can handle different character ecodings,
+    error handler is not invoked.
+    When squirrel is compiled in Unicode mode the function can handle different character encodings,
     UTF8 with and without prefix and UCS-2 prefixed(both big endian an little endian).
-    If the source stream is not prefixed UTF8 ecoding is used as default.
+    If the source stream is not prefixed UTF8 encoding is used as default.
 
 .. js:function:: writeclosuretofile(destpath, closure)
 
@@ -63,7 +63,7 @@ The file class
 
 .. js:class:: file(path, patten)
 
-    It's contructor imitates the behaviour of the C runtime function fopen for eg. ::
+    It's constructor imitates the behaviour of the C runtime function fopen for eg. ::
 
         local myfile = file("test.xxx","wb+");
 
@@ -79,30 +79,30 @@ The file class
 
 .. js:function:: file.flush()
 
-    flushes the stream.return a value != null if succeded, otherwise returns null
+    flushes the stream.return a value != null if succeeded, otherwise returns null
 
 .. js:function:: file.len()
 
-    returns the lenght of the stream
+    returns the length of the stream
 
 .. js:function:: file.readblob(size)
 
     :param int size: number of bytes to read
 
-    read n bytes from the stream and retuns them as blob
+    read n bytes from the stream and returns them as blob
 
 .. js:function:: file.readn(type)
 
     :param int type: type of the number to read
 
-    reads a number from the stream according to the type pameter.
+    reads a number from the stream according to the type parameter.
 
     `type` can have the following values:
 
 +--------------+--------------------------------------------------------------------------------+----------------------+
 | parameter    | return description                                                             |  return type         |
 +==============+================================================================================+======================+
-| 'l'          | processor dependent, 32bits on 32bits processors, 64bits on 64bits prcessors   |  integer             |
+| 'l'          | processor dependent, 32bits on 32bits processors, 64bits on 64bits processors  |  integer             |
 +--------------+--------------------------------------------------------------------------------+----------------------+
 | 'i'          | 32bits number                                                                  |  integer             |
 +--------------+--------------------------------------------------------------------------------+----------------------+
@@ -121,7 +121,7 @@ The file class
 
 .. js:function:: file.resize(size)
 
-    :param int size: the new size of the blobl in bytes
+    :param int size: the new size of the blob in bytes
 
     resizes the blob to the specified `size`
 
@@ -157,7 +157,7 @@ The file class
     :param number n: the value to be written
     :param int type: type of the number to write
 
-    writes a number in the stream formatted according to the `type` pameter
+    writes a number in the stream formatted according to the `type` pamraeter
 
     `type` can have the following values:
 
@@ -212,7 +212,7 @@ File Object
 
     :param HSQUIRRELVM v: the target VM
     :param SQInteger idx: and index in the stack
-    :param SQFILE* file: A pointer to a SQFILE handle that will store the result
+    :param SQFILE * file: A pointer to a SQFILE handle that will store the result
     :returns: an SQRESULT
 
     retrieve the pointer of a stream handle from an arbitrary
@@ -222,43 +222,43 @@ File Object
 Script loading and serialization
 ++++++++++++++++++++++++++++++++
 
-.. c:function:: SQRESULT sqstd_loadfile(HSQUIRRELVM v, const SQChar* filename, SQBool printerror)
+.. c:function:: SQRESULT sqstd_loadfile(HSQUIRRELVM v, const SQChar * filename, SQBool printerror)
 
     :param HSQUIRRELVM v: the target VM
-    :param SQChar* filename: path of the script that has to be loaded
+    :param SQChar * filename: path of the script that has to be loaded
     :param SQBool printerror: if true the compiler error handler will be called if a error occurs
     :returns: an SQRESULT
 
     Compiles a squirrel script or loads a precompiled one an pushes it as closure in the stack.
-    When squirrel is compiled in unicode mode the function can handle different character ecodings,
+    When squirrel is compiled in Unicode mode the function can handle different character encodings,
     UTF8 with and without prefix and UCS-2 prefixed(both big endian an little endian).
-    If the source stream is not prefixed UTF8 ecoding is used as default.
+    If the source stream is not prefixed UTF8 encoding is used as default.
 
-.. c:function:: SQRESULT sqstd_dofile(HSQUIRRELVM v, const SQChar* filename, SQBool retval, SQBool printerror)
+.. c:function:: SQRESULT sqstd_dofile(HSQUIRRELVM v, const SQChar * filename, SQBool retval, SQBool printerror)
 
     :param HSQUIRRELVM v: the target VM
-    :param SQChar* filename: path of the script that has to be loaded
+    :param SQChar * filename: path of the script that has to be loaded
     :param SQBool retval: if true the function will push the return value of the executed script in the stack.
     :param SQBool printerror: if true the compiler error handler will be called if a error occurs
     :returns: an SQRESULT
-    :remarks: the function aspects a table on top of the stack that will be used as 'this' for the execution of the script. The 'this' parameter is left untouched in the stack.
+    :remarks: the function expects a table on top of the stack that will be used as 'this' for the execution of the script. The 'this' parameter is left untouched in the stack.
 
     Compiles a squirrel script or loads a precompiled one and executes it.
     Optionally pushes the return value of the executed script in the stack.
-    When squirrel is compiled in unicode mode the function can handle different character ecodings,
+    When squirrel is compiled in unicode mode the function can handle different character encodings,
     UTF8 with and without prefix and UCS-2 prefixed(both big endian an little endian).
-    If the source stream is not prefixed UTF8 ecoding is used as default. ::
+    If the source stream is not prefixed, UTF8 encoding is used as default. ::
 
         sq_pushroottable(v); //push the root table(were the globals of the script will are stored)
         sqstd_dofile(v, _SC("test.nut"), SQFalse, SQTrue);// also prints syntax errors if any
 
-.. c:function:: SQRESULT sqstd_writeclosuretofile(HSQUIRRELVM v, const SQChar* filename)
+.. c:function:: SQRESULT sqstd_writeclosuretofile(HSQUIRRELVM v, const SQChar * filename)
 
     :param HSQUIRRELVM v: the target VM
-    :param SQChar* filename: destination path of serialized closure
+    :param SQChar * filename: destination path of serialized closure
     :returns: an SQRESULT
 
     serializes the closure at the top position in the stack as bytecode in
-    the file specified by the paremeter filename. If a file with the
+    the file specified by the parameter filename. If a file with the
     same name already exists, it will be overwritten.
 

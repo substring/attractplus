@@ -13,11 +13,10 @@ Calls
     :param SQBool retval: if true the function will push the return value in the stack
     :param SQBool raiseerror: if true, if a runtime error occurs during the execution of the call, the vm will invoke the error handler.
     :returns: a SQRESULT
-    :remarks: the function pops all the parameters and leave the closure in the stack; if retval is true the return value of the closure is pushed. If the execution of the function is suspended through sq_suspendvm(), the closure and the arguments will not be automatically popped from the stack.
 
-calls a closure or a native closure.
+calls a closure or a native closure. The function pops all the parameters and leave the closure in the stack; if retval is true the return value of the closure is pushed. If the execution of the function is suspended through sq_suspendvm(), the closure and the arguments will not be automatically popped from the stack.
 
-
+When using to create an instance, push a dummy parameter to be filled with the newly-created instance for the constructor's 'this' parameter.
 
 
 
@@ -88,21 +87,37 @@ reset the last error in the virtual machine to null
 resumes the generator at the top position of the stack.
 
 
+.. _sq_tailcall:
 
+.. c:function:: SQRESULT sq_tailcall(HSQUIRRELVM v, SQInteger nparams)
 
+	:param HSQUIRRELVM v: the target VM
+	:param SQInteger params: number of parameters of the function
 
+    Calls a closure and removes the caller function from the call stack.
+    This function must be invoke from a native closure and 
+    he return value of sq_tailcall must be returned by the caller function(see example).
+	
+*.eg*
+
+::
+
+    SQInteger tailcall_something_example(HSQUIRRELVM v)
+    {
+		//push closure and parameters here
+		... 
+        return sq_tailcall(v,2);
+    }
+	
 .. _sq_throwerror:
 
 .. c:function:: SQRESULT sq_throwerror(HSQUIRRELVM v, const SQChar * err)
 
     :param HSQUIRRELVM v: the target VM
-    :param const SQChar * err: the description of the error that has to be thrown
+    :param SQChar * err: the description of the error that has to be thrown
     :returns: the value that has to be returned by a native closure in order to throw an exception in the virtual machine.
 
 sets the last error in the virtual machine and returns the value that has to be returned by a native closure in order to trigger an exception in the virtual machine.
-
-
-
 
 
 .. _sq_throwobject:
