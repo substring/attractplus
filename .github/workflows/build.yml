@@ -110,8 +110,10 @@ jobs:
     - name: AM+ - Build attract-console.exe
       if: matrix.platform.name == 'Windows x64'
       run: |
+        fe_version=
+        [[ ${GITHUB_REF} == refs/tags/* ]] && fe_version="${GITHUB_REF#refs/*/}"
         make -C am smallclean
-        make -C am -j$(nproc) WINDOWS_CONSOLE=1 ${{matrix.platform.amosflags}} ${{matrix.config.amflags}} ${{env.cross_toolchain}}
+        make -C am -j$(nproc) WINDOWS_CONSOLE=1 FE_VERSION=$fe_version ${{matrix.platform.amosflags}} ${{matrix.config.amflags}} ${{env.cross_toolchain}}
       env:
         PKG_CONFIG_PATH: "${{github.workspace}}/sfml/install"
         PKG_CONFIG_PATH_x86_64_w64_mingw32_${{matrix.config.name}}: "${{github.workspace}}/sfml/install/pkgconfig"
