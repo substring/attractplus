@@ -91,7 +91,7 @@ jobs:
       run: ${{env.cross_prefix}}cmake --build $GITHUB_WORKSPACE/sfml/build --config Release --target install
 
     - name: AM+ - Build
-      run: ${{matrix.platform.ammakeopts}} make -C am -j$(nproc) ${{matrix.platform.amosflags}} ${{matrix.config.amflags}} ${{env.cross_toolchain}} VERBOSE=1
+      run: ${{matrix.platform.ammakeopts}} make -C am -j$(nproc) FE_VERSION=${GITHUB_REF#refs/*/} ${{matrix.platform.amosflags}} ${{matrix.config.amflags}} ${{env.cross_toolchain}} VERBOSE=1
       env:
         PKG_CONFIG_PATH: "${{github.workspace}}/sfml/install:${{github.workspace}}/sfml/install/pkgconfig"
         PKG_CONFIG_PATH_x86_64_w64_mingw32_${{matrix.config.name}}: "${{github.workspace}}/sfml/install/pkgconfig"
@@ -184,7 +184,7 @@ jobs:
         run: |
           cmake -S /sfml -B /sfml/build -DCMAKE_INSTALL_PREFIX=/sfml/install -DSFML_INSTALL_PKGCONFIG_FILES=TRUE -DSFML_BUILD_NETWORK=FALSE ${{matrix.platform.flags}} ${{matrix.config.flags}}
           cmake --build /sfml/build --config Release --target install
-          make -C /am -j$(nproc) ${{matrix.platform.amosflags}} ${{matrix.config.amflags}}
+          make -C /am -j$(nproc) FE_VERSION=${GITHUB_REF#refs/*/} ${{matrix.platform.amosflags}} ${{matrix.config.amflags}}
 
     - name: Prepare artifacts
       run: |
