@@ -58,8 +58,8 @@ Delete this Rule;Supprimer cette règle
 Disabled;Désactivé
 Display Edit;Edition de la liste
 Display Name;Nom de la liste
-DisplayCount;Afficher compteur
-DisplayType;Afficher type
+DisplayCount;Nombre d'écrans
+DisplayType;Type d'affichage
 Displays;Listes d'affichage
 Displays Menu;Liste des Listes d'affichage
 Down;Bas
@@ -70,18 +70,18 @@ Emulator;Emulateur
 Emulator Name;Nom de l'émulateur
 Emulators;Emulateurs
 Enabled;Activé
-Enter Display Name;Entrer le nom de la liste
-Enter Emulator Name;Nom de l'émulateur?
-Enter Filter Name;Entrer le nom du filtre
+Enter Display Name;Saisir le nom de la liste
+Enter Emulator Name;Saisir le nom de l'émulateur
+Enter Filter Name;Saisir le nom du filtre
 Executable;Exécutable
 Exit;Sortie (Confirmer)
 Exit Attract-Mode;Quitter Attract-Mode
-Exit Attract-Mode?;Quitter Attract-Mode?
+Exit Attract-Mode?;Quitter Attract-Mode ?
 Exit Command;Commande de sortie
 Exit Hotkey;Raccourci clavier pour sortir
 Exit to Desktop;Sortie vers le bureau
 Favourite;Favoris
-Fill Screen (Default);Rempli l'écran (Default)
+Fill Screen (Default);Remplir l'écran (Default)
 Filter;Filtre
 Filter Edit;Edition du filtre
 Filter Name;Nom du filtre
@@ -97,12 +97,12 @@ Generate Collection/Rom List;Générer la liste de roms
 Generating Rom List: $1%;Génération de la liste de ROM: $1%
 Global Filter;Filtre global
 Hide Brackets in Game Title;Cacher les crochets dans le titre du jeu
-Info Source/Scraper;Info Source/Aspiration
+Info Source/Scraper;Sources infos/Aspiration
 Joystick Threshold;Seuil du joystick
 Jump to Next Display;Bascule sur la liste de roms suivante
 Language;Langue
 Layout;Thème
-Layout Options;Options du Layout
+Layout Options;Options du thème
 Left;Gauche
 List Limit;taille maximum de la liste
 Manufacturer;Fabriquant
@@ -135,7 +135,7 @@ Remove Input;Enlever le contrôle
 Replay Last Game;Rejouer au dernier jeu
 Right;Droite
 Rom Extension(s);Extension(s) des ROM
-Rom Path(s);Chemin des ROM
+Rom Path(s);Chemin(s) des ROM
 Rom path '$1' not found, proceed anyways?;Chemin des ROM '$1' introuvable, continuer?
 Rotation;Rotation
 Rule;Règle
@@ -152,7 +152,7 @@ Screen Saver;Economiseur d'écran
 Screen Saver Timeout;Décompte économiseur d'écran
 Screenshot;Photo écran
 Select;Sélection
-Sort By;Classé par
+Sort By;Trié par
 Sound;Son
 Sound Volume;Volume général
 Startup Sound;Son au démarrage
@@ -161,7 +161,7 @@ System Identifier;Identifiant du système
 Tags;Mots clés
 Target;Cible
 The name for this filter;Nom du filtre
-This will overwrite an existing mapping ($1).  Proceed?;Ecraser le contrôle existant ($1). Confirmer?
+This will overwrite an existing mapping ($1).  Proceed?;Ecraser le contrôle existant ($1). Confirmer ?
 Title;Titre
 Toggle Flip;Basculer mode retourné
 Toggle Layout;Basculer le thème
