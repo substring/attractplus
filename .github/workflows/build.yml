@@ -148,7 +148,7 @@ jobs:
       run: |
         brew update
         brew upgrade
-        brew install pkgconfig ffmpeg libarchive libvorbis flac jpeg-turbo boost sfml
+        brew install pkgconfig ffmpeg libarchive libvorbis flac jpeg-turbo boost sfml openal-soft
     #~ - name: MacOS switch to GCC
       #~ if: runner.os == 'macOS'
       #~ run: |
@@ -336,11 +336,15 @@ jobs:
     - name: Build AM+
       run: |
         make -C am -j$(nproc) VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} CROSS=1 FE_WINDOWS_COMPILE=1 STATIC=1 TOOLCHAIN=x86_64-w64-mingw32.static
+      env:
+        PKG_CONFIG_PATH: "/usr/local/opt/openal-soft/lib/pkgconfig"
 
     - name: Build AM+ attract-console.exe (Windows only)
       run: |
         make -C am smallclean CROSS=1 FE_WINDOWS_COMPILE=1 STATIC=1 TOOLCHAIN=x86_64-w64-mingw32.static
         make -C am -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} CROSS=1 FE_WINDOWS_COMPILE=1 STATIC=1 TOOLCHAIN=x86_64-w64-mingw32.static WINDOWS_CONSOLE=1
+      env:
+        PKG_CONFIG_PATH: "/usr/local/opt/openal-soft/lib/pkgconfig"
 
     - name: Prepare artifacts
       run: |
