@@ -120,9 +120,9 @@ jobs:
             --rm \
             --volume "${GITHUB_WORKSPACE}/am:/am" \
             -w ${{ github.workspace }} \
-            --platform ${{ matrix.platform.archos }} \
-            debian:${{ matrix.platform.platform }} \
-            "apt-get update -y -q && apt-get install -y -q build-essential cmake pkgconf libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libavformat-dev libfontconfig1-dev libfreetype6-dev libswscale-dev libswresample-dev libarchive-dev libjpeg-dev libglu1-mesa-dev libgbm-dev libdrm-dev libegl1-mesa-dev libcurl4-gnutls-dev && make -C am -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} ${{matrix.platform.amflags}} ${{matrix.config.amflags}} ${{env.cross_toolchain}}"
+            --platform ${{ matrix.platform.platform }} \
+            debian:${{ matrix.platform.archos }} \
+            /bin/bash -c "apt-get update -y -q && apt-get install -y -q build-essential cmake pkgconf libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libavformat-dev libfontconfig1-dev libfreetype6-dev libswscale-dev libswresample-dev libarchive-dev libjpeg-dev libglu1-mesa-dev libgbm-dev libdrm-dev libegl1-mesa-dev libcurl4-gnutls-dev && make -C am -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} ${{matrix.platform.amflags}} ${{matrix.config.amflags}} ${{env.cross_toolchain}}"
 
     #~ - name: MacOS switch to GCC
       #~ if: runner.os == 'macOS'
