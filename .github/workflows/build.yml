@@ -17,7 +17,7 @@ jobs:
         - { name: Linux x64 KMS, os: ubuntu-20.04, amflags: USE_DRM=1 }
         - { name: Linux x64 X11, os: ubuntu-20.04 }
         - { name: MacOS,         os: macos-12, amflags: prefix=.., flags: -DSFML_USE_SYSTEM_DEPS=1 }
-        - { name: armv7,         os: ubuntu-22.04, platform: linux/arm32/v7, archos: "arm32v7/debian:bookworm-slim", shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
+        - { name: armv7,         os: ubuntu-22.04, platform: linux/arm/v7, archos: "arm32v7/debian:bookworm-slim", shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
         - { name: aarch64,       os: ubuntu-22.04, platform: linux/arm64/v8, archos: "arm64v8/debian:bookworm-slim", shell: bash, amflags: USE_DRM=1}
         config:
         - { name: shared, amflags: STATIC=0 }
