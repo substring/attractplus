@@ -17,8 +17,8 @@ jobs:
         - { name: Linux x64 KMS, os: ubuntu-20.04, amflags: USE_DRM=1 }
         - { name: Linux x64 X11, os: ubuntu-20.04 }
         - { name: MacOS,         os: macos-12, amflags: prefix=.., flags: -DSFML_USE_SYSTEM_DEPS=1 }
-        - { name: armv7,         os: ubuntu-22.04, platform: linux/arm64/v8, archos: debian:bookworm-slim, shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
-        - { name: aarch64,       os: ubuntu-22.04, platform: linux/arm32/v7, archos: debian:bookworm-slim, shell: bash, amflags: USE_DRM=1}
+        - { name: armv7,         os: ubuntu-22.04, platform: linux/arm64/v8, archos: bookworm-slim, shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
+        - { name: aarch64,       os: ubuntu-22.04, platform: linux/arm32/v7, archos: bookworm-slim, shell: bash, amflags: USE_DRM=1}
         config:
         - { name: shared, amflags: STATIC=0 }
         - { name: static, amflags: STATIC=1 }
@@ -121,7 +121,7 @@ jobs:
             --volume "${GITHUB_WORKSPACE}/am:/am" \
             -w ${{ github.workspace }} \
             --platform ${{ matrix.platform.archos }} \
-            ${{ matrix.platform.platform }} \
+            debian:${{ matrix.platform.platform }} \
             "apt-get update -y -q && apt-get install -y -q build-essential cmake pkgconf libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libavformat-dev libfontconfig1-dev libfreetype6-dev libswscale-dev libswresample-dev libarchive-dev libjpeg-dev libglu1-mesa-dev libgbm-dev libdrm-dev libegl1-mesa-dev libcurl4-gnutls-dev && make -C am -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} ${{matrix.platform.amflags}} ${{matrix.config.amflags}} ${{env.cross_toolchain}}"
 
     #~ - name: MacOS switch to GCC
