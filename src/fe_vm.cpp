@@ -1311,7 +1311,7 @@ void FeVM::on_transition(
 {
 	using namespace Sqrat;
 
-	FeLog() << "[Transition] type=" << transitionTypeStrings[t] << ", var=" << var << std::endl;
+	// FeLog() << "[Transition] type=" << transitionTypeStrings[t] << ", var=" << var << std::endl;
 
 	sf::Clock clk;
 	int ttime = 0;
@@ -2583,6 +2583,7 @@ const char *FeVM::cb_game_info( int index )
 
 const char *FeVM::cb_get_art( const char *art, int index_offset, int filter_offset, int art_flags )
 {
+	// sf::Clock clk;
 	HSQUIRRELVM vm = Sqrat::DefaultVM::Get();
 	FeVM *fev = (FeVM *)sq_getforeignptr( vm );
 	FeSettings *fes = fev->m_feSettings;
@@ -2646,7 +2647,7 @@ const char *FeVM::cb_get_art( const char *art, int index_offset, int filter_offs
 		//
 		retval = absolute_path( retval );
 	}
-
+	// FeLog() << clk.getElapsedTime().asMicroseconds() << std::endl;
 	return retval.c_str();
 }
 
