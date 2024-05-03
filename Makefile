@@ -415,7 +415,7 @@ ifeq ($(FE_WINDOWS_COMPILE),1)
 else ifeq ($(FE_MACOSX_COMPILE),1)
  LIBS += -lboost_system -lboost_filesystem
 else
- LIBS += -l:libboost_system.a -l:libboost_filesystem.a
+ LIBS += -l:libboost_filesystem.a -l:libboost_system.a
 endif
 
 CFLAGS += -I$(EXTLIBS_DIR)/squirrel/include -I$(EXTLIBS_DIR)/sqrat/include -I$(EXTLIBS_DIR)/nowide -I$(EXTLIBS_DIR)/nvapi -I$(EXTLIBS_DIR)/rapidjson/include
