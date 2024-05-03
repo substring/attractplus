@@ -407,7 +407,14 @@ else
  EXPAT =
 endif
 
-LIBS += -lfreetype -lpthread -lboost_system-mt -lboost_filesystem-mt
+LIBS += -lfreetype -lpthread
+
+# Boost static linking
+ifeq ($(FE_WINDOWS_COMPILE),1)
+ LIBS += -lboost_system-mt -lboost_filesystem-mt
+else
+ LIBS += -l:libboost_system.a -l:libboost_filesystem.a
+endif
 
 CFLAGS += -I$(EXTLIBS_DIR)/squirrel/include -I$(EXTLIBS_DIR)/sqrat/include -I$(EXTLIBS_DIR)/nowide -I$(EXTLIBS_DIR)/nvapi -I$(EXTLIBS_DIR)/rapidjson/include
 SQUIRREL = $(OBJ_DIR)/libsquirrel.a $(OBJ_DIR)/libsqstdlib.a
