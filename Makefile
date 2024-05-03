@@ -412,6 +412,8 @@ LIBS += -lfreetype -lpthread
 # Boost static linking
 ifeq ($(FE_WINDOWS_COMPILE),1)
  LIBS += -lboost_system-mt -lboost_filesystem-mt
+else ifeq ($(FE_MACOSX_COMPILE),1)
+ LIBS += -lboost_system -lboost_filesystem
 else
  LIBS += -l:libboost_system.a -l:libboost_filesystem.a
 endif
