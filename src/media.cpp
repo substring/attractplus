@@ -778,17 +778,8 @@ void FeVideoImp::video_thread()
 						if ( raw_frame->pts == AV_NOPTS_VALUE )
 							raw_frame->pts = packet->dts;
 
-
-#if (LIBAVCODEC_VERSION_INT >= AV_VERSION_INT( 57, 30, 100 ))
-						// Correct for out of bounds pts
-						if ( raw_frame->pts < prev_pts )
-							raw_frame->pts = prev_pts + prev_duration;
-
-						// Track pts and duration if we need to correct next frame
-						prev_pts = raw_frame->pts;
-						prev_duration = raw_frame->duration;
-#elif (LIBAVUTIL_VERSION_MICRO >= 100 )
-						// This only works on FFmpeg, exclude libav (it doesn't have pkt_duration
+// AVFrame.pkt_duration renamed to AVFrame.duration with FFmpeg 6, and deprecated with FFmpeg 7
+#if (LIBAVUTIL_VERSION_INT < AV_VERSION_INT( 58, 2, 100 ))
 						// Correct for out of bounds pts
 						if ( raw_frame->pts < prev_pts )
 							raw_frame->pts = prev_pts + prev_duration;
@@ -796,6 +787,15 @@ void FeVideoImp::video_thread()
 						// Track pts and duration if we need to correct next frame
 						prev_pts = raw_frame->pts;
 						prev_duration = raw_frame->pkt_duration;
+#elif (LIBAVUTIL_VERSION_INT >= AV_VERSION_INT( 58, 2, 100 ))
+						// This only works on FFmpeg, exclude libav (it doesn't have pkt_duration
+						// Correct for out of bounds pts
+						if ( raw_frame->pts < prev_pts )
+							raw_frame->pts = prev_pts + prev_duration;
+
+						// Track pts and duration if we need to correct next frame
+						prev_pts = raw_frame->pts;
+						prev_duration = raw_frame->duration;
 #endif
 
 						detached_frame = raw_frame;
