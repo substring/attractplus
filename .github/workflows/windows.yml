@@ -25,10 +25,10 @@ jobs:
         install: >-
           base-devel
           mingw-w64-${{matrix.env}}-toolchain
-          mingw-w64-sfml
-          mingw-w64-ffmpeg
-          mingw-w64-boost
-          mingw-w64-libarchive
+          mingw-w64-${{matrix.env}}-sfml
+          mingw-w64-${{matrix.env}}-ffmpeg
+          mingw-w64-${{matrix.env}}-boost
+          mingw-w64-${{matrix.env}}-libarchive
 
     - name: AM+ - Checkout
       uses: actions/checkout@v4
