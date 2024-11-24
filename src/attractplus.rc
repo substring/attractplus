@@ -59,4 +59,4 @@ APP_MANIFEST RT_MANIFEST attractplus.exe.manifest
 			VALUE "Translation", LANG, CHARSET
 		END
 	END
-103 ICON APP_ICON "\0"
+103 ICON APP_ICON
