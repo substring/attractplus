@@ -61,7 +61,7 @@ jobs:
         for e in "${GITHUB_WORKSPACE}"/am/*.exe ; do
           echo "Gathering dll infos for $e ..."
           which mingw-ldd || continue
-          for dll in $(mingw-ldd "$e" --dll-lookup-dirs /usr/lib/mxe/usr/x86_64-w64-mingw32.shared/bin/ "${GITHUB_WORKSPACE}"/sfml/install/lib/ | grep -v 'not found$' | tr -d ' ' | cut -d '>' -f 2) ; do
+          for dll in $(ldd "$e" | grep -v '/c/' | tr -d ' ' | cut -d '>' -f 2) ; do
             cp "$dll" "${GITHUB_WORKSPACE}"/artifacts/
           done
         done
