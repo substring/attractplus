@@ -36,6 +36,7 @@ jobs:
         path: am
 
     - name: Prepare (Windows x64)
+      shell: msys2 {0}
       id: vars
       run: |
         echo "nbproc=${nbproc}" >> $GITHUB_OUTPUT
@@ -49,11 +50,13 @@ jobs:
         make -C am USE_SYSTEM_SFML=1 -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }}
 
     - name: Build AM+ (console)
+      shell: msys2 {0}
       run: |
         make -C am smallclean
         make -C am USE_SYSTEM_SFML=1 -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} WINDOWS_CONSOLE=1
 
     - name: Prepare artifacts
+      shell: msys2 {0}
       run: |
         mkdir -p "${GITHUB_WORKSPACE}"/artifacts
         for e in "${GITHUB_WORKSPACE}"/am/*.exe ; do
