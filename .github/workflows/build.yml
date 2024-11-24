@@ -1,4 +1,4 @@
-name: Build
+name: Build Linux (x86_64/armv7/aarch64) / MacOS
 
 on: [push, pull_request]
 
