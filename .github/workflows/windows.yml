@@ -25,7 +25,6 @@ jobs:
         install: >-
           base-devel
           mingw-w64-${{matrix.env}}-toolchain
-          mingw-w64-cmake
           mingw-w64-sfml
           mingw-w64-ffmpeg
           mingw-w64-boost
