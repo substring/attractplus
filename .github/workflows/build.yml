@@ -45,6 +45,7 @@ jobs:
         path: am
 
     - name: Prepare
+      if: matrix.platform.name != 'Windows x64'
       id: vars
       run: |
         which nproc && nbproc=$(nproc) || nbproc=$(getconf _NPROCESSORS_ONLN)
@@ -54,8 +55,8 @@ jobs:
         echo "fe_version=${fe_version}" >> $GITHUB_OUTPUT
 
     - name: Prepare (Windows x64)
-      id: vars
       if: matrix.platform.name == 'Windows x64'
+      id: vars
       run: |
         echo "nbproc=${nbproc}" >> $GITHUB_OUTPUT
         fe_version=
