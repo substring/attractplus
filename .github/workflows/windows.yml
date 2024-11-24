@@ -39,7 +39,6 @@ jobs:
       shell: msys2 {0}
       id: vars
       run: |
-        echo "nbproc=${nbproc}" >> $GITHUB_OUTPUT
         fe_version=
         [[ ${GITHUB_REF} =~ ^refs/tags/* ]] && fe_version="${GITHUB_REF#refs/*/}"
         echo "fe_version=${fe_version}" >> $GITHUB_OUTPUT
@@ -47,13 +46,13 @@ jobs:
     - name: Build AM+
       shell: msys2 {0}
       run: |
-        make -C am USE_SYSTEM_SFML=1 -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} ${{ matrix.make_env }}
+        make -C am USE_SYSTEM_SFML=1 VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} -j$(nproc) ${{ matrix.make_env }}
 
     - name: Build AM+ (console)
       shell: msys2 {0}
       run: |
         make -C am smallclean
-        make -C am USE_SYSTEM_SFML=1 -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} ${{ matrix.make_env }} WINDOWS_CONSOLE=1
+        make -C am WINDOWS_CONSOLE=1 USE_SYSTEM_SFML=1 VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} -j$(nproc) ${{ matrix.make_env }}
 
     - name: Prepare artifacts
       shell: msys2 {0}
