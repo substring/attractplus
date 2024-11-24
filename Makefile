@@ -416,7 +416,7 @@ LIBS += -lfreetype
 
 # Boost static linking
 ifeq ($(FE_WINDOWS_COMPILE),1)
- LIBS += -lboost_system-mt -lboost_filesystem-mt
+ LIBS += -lwinmm
 else ifeq ($(FE_MACOSX_COMPILE),1)
  LIBS +=-L$(shell brew --prefix)/lib 
  LIBS += -lboost_system -lboost_filesystem
