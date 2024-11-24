@@ -9,7 +9,7 @@ jobs:
   buildAM:
     name: ${{ matrix.platform.name }} ${{ matrix.config.name }}
     runs-on: ${{ matrix.platform.os }}
-    if: ${{ matrix.platform.name }} == 'Windows x64'
+    if: matrix.platform.name == 'Windows x64'
     run:
       shell: msys2 {0}
 
