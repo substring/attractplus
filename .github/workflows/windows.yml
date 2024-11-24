@@ -31,7 +31,6 @@ jobs:
           mingw-w64-boost
           mingw-w64-libarchive
 
-    steps:
     - name: AM+ - Checkout
       uses: actions/checkout@v4
       with:
