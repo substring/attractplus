@@ -1,0 +1,120 @@
+name: Build
+
+on: [push, pull_request]
+
+env:
+  PKG_CONFIG_PATH_x86_64_w64_mingw32_static: /usr/lib/mxe/usr/x86_64-w64-mingw32.static/lib/pkgconfig/
+
+jobs:
+  buildAM:
+    name: ${{ matrix.platform.name }} ${{ matrix.config.name }}
+    runs-on: ${{ matrix.platform.os }}
+
+    strategy:
+    matrix:
+      include:
+        - { sys: mingw64, env: x86_64 }
+        - { sys: ucrt64,  env: ucrt-x86_64 }
+        - { sys: clang64, env: clang-x86_64 }
+  steps:
+    - uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{matrix.sys}}
+        install: mingw-w64-${{matrix.env}}-openssl
+
+        include:
+        - platform: { name: Windows x64 }
+          config: { name: static }
+          specifific_flags: -DCMAKE_CXX_FLAGS="-DAL_LIBTYPE_STATIC=TRUE"
+
+    - name: Install MSYS2 for Windows
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{matrix.sys}}
+        update: true
+        install: >-
+          base-devel
+          mingw-w64-${{matrix.env}}-toolchain
+          mingw-w64-cmake
+          mingw-w64-sfml
+          mingw-w64-ffmpeg
+          mingw-w64-boost
+          mingw-w64-libarchive
+
+    steps:
+    - name: AM+ - Checkout
+      uses: actions/checkout@v4
+      with:
+        path: am
+
+    - name: Prepare (Windows x64)
+      id: vars
+      run: |
+        echo "nbproc=${nbproc}" >> $GITHUB_OUTPUT
+        fe_version=
+        [[ ${GITHUB_REF} =~ ^refs/tags/* ]] && fe_version="${GITHUB_REF#refs/*/}"
+        echo "fe_version=${fe_version}" >> $GITHUB_OUTPUT
+
+    - name: Build AM+
+      shell: msys2 {0}
+      run: |
+        make -C am USE_SYSTEM_SFML=1 -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }}
+
+    - name: Build AM+ (console)
+      run: |
+        make -C am smallclean
+        make -C am USE_SYSTEM_SFML=1 -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} WINDOWS_CONSOLE=1
+
+    - name: Prepare artifacts
+      run: |
+        mkdir -p "${GITHUB_WORKSPACE}"/artifacts
+        for e in "${GITHUB_WORKSPACE}"/am/*.exe ; do
+          echo "Gathering dll infos for $e ..."
+          which mingw-ldd || continue
+          for dll in $(mingw-ldd "$e" --dll-lookup-dirs /usr/lib/mxe/usr/x86_64-w64-mingw32.shared/bin/ "${GITHUB_WORKSPACE}"/sfml/install/lib/ | grep -v 'not found$' | tr -d ' ' | cut -d '>' -f 2) ; do
+            cp "$dll" "${GITHUB_WORKSPACE}"/artifacts/
+          done
+        done
+        find "${GITHUB_WORKSPACE}"/am/obj/sfml/install/lib/ -name "*.dll" -o -name "*.so" -o -name "*.dylib" -exec cp -v {} "${GITHUB_WORKSPACE}"/artifacts/ \;
+        cp am/attract* "${GITHUB_WORKSPACE}"/artifacts/
+        cp -R am/config/* "${GITHUB_WORKSPACE}"/artifacts/
+        7z a "attract-${{matrix.platform.name}}-${{matrix.config.name}}.7z" ./artifacts/*
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{matrix.platform.name}}-${{matrix.config.name}}
+        path: attract-*.7z
+
+  Release:
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+    name: Release to github
+    needs: buildAM
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts
+
+    - name: Prepare artifacts
+      id: prepare_artifacts
+      run: |
+        tag="${GITHUB_REF#refs/*/}"
+        echo "current_tag=${tag}" >> $GITHUB_OUTPUT
+        mkdir -p "${GITHUB_WORKSPACE}"/artifacts_for_release
+        find "${GITHUB_WORKSPACE}"/artifacts/ -name "*.7z" | while read f ; do
+          p="$(basename "$f")"
+          cp -v "$f" "${GITHUB_WORKSPACE}/artifacts_for_release/attract-${GITHUB_REF#refs/*/}-${p#attract-}"
+        done
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        name: Attract Mode Plus ${{ steps.prepare_artifacts.outputs.current_tag }}
+        draft: true
+        prerelease: false
+        files: artifacts_for_release/attract-*.7z
