@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         include:
-          #- { sys: mingw64, env: x86_64 }
+          - { sys: mingw64, env: x86_64 }
           - { sys: ucrt64,  env: ucrt-x86_64 }
           # clang crashes because of SFML uint32_t type
           #- { sys: clang64, env: clang-x86_64, make_env: CC=clang CXX=clang++ LD=lld EXTRA_CFLAGS=-w CXXFLAGS=-w }
