@@ -2,9 +2,6 @@ name: Build Windows
 
 on: [push, pull_request]
 
-env:
-  PKG_CONFIG_PATH_x86_64_w64_mingw32_static: /usr/lib/mxe/usr/x86_64-w64-mingw32.static/lib/pkgconfig/
-
 jobs:
   buildAM:
     name: ${{ matrix.sys }}
