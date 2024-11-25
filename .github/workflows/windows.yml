@@ -59,20 +59,19 @@ jobs:
         mkdir -p "${GITHUB_WORKSPACE}"/artifacts
         for e in "${GITHUB_WORKSPACE}"/am/*.exe ; do
           echo "Gathering dll infos for $e ..."
-          which mingw-ldd || continue
-          for dll in $(ldd "$e" | grep -v '/c/' | tr -d ' ' | cut -d '>' -f 2) ; do
+          for dll in $(ldd "$e" | grep -v '/c/' | tr -d ' ' | cut -d '>' -f 2 | cut -d '(' -f1) ; do
             cp "$dll" "${GITHUB_WORKSPACE}"/artifacts/
           done
         done
         cp am/attract* "${GITHUB_WORKSPACE}"/artifacts/
         cp -R am/config/* "${GITHUB_WORKSPACE}"/artifacts/
-        7z a "attract-${{matrix.sys}}.7z" ./artifacts/*
+        7z a "attractplus-${{matrix.sys}}.7z" ./artifacts/*
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: Windows x64-${{matrix.sys}}
-        path: attract-*.7z
+        path: attractplus-*.7z
 
   Release:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
