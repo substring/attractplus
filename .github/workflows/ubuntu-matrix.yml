@@ -207,7 +207,7 @@ jobs:
   Release:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     name: Release to github
-    needs: buildAMx86 buildAMarm
+    needs: [buildAMx86, buildAMarm]
     runs-on: ubuntu-latest
 
     steps:
