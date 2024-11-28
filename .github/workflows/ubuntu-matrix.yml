@@ -17,8 +17,6 @@ jobs:
         - { name: Linux x64 KMS, targetos: linux-x86, amflags: USE_DRM=1 }
         - { name: Linux x64 X11, targetos: linux-x86 }
         #- { name: MacOS,         targetos: mac,       os: macos-latest, amflags: prefix=.. USE_SYSTEM_SFML=1, flags: -DSFML_USE_SYSTEM_DEPS=1 }
-        #- { name: armv7,         targetos: linux-arm, os: ubuntu-20.04, archos: buster, shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
-        #- { name: aarch64,       targetos: linux-arm, os: ubuntu-20.04, archos: buster, shell: bash, amflags: USE_DRM=1}
         config:
         - { name: shared, amflags: STATIC=0 }
         - { name: static, amflags: STATIC=1 }
@@ -50,7 +48,7 @@ jobs:
       if: matrix.platform.targetos == 'linux-x86'
       run: |
         sudo apt update
-        sudo apt install pkgconf libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libavformat-dev libfontconfig1-dev libfreetype6-dev libswscale-dev libswresample-dev libarchive-dev libjpeg-dev libglu1-mesa-dev libegl1-mesa-dev libgbm-dev libdrm-dev libcurl4-gnutls-dev libboost-system-dev libboost-filesystem-dev
+        sudo apt install build-essential cmake pkgconf libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libavformat-dev libfontconfig1-dev libfreetype6-dev libswscale-dev libswresample-dev libarchive-dev libjpeg-dev libglu1-mesa-dev libegl1-mesa-dev libgbm-dev libdrm-dev libcurl4-gnutls-dev libboost-system-dev libboost-filesystem-dev
 
     - name: Install Linux MXE for Windows cross-building
       if: matrix.targetos == 'windows'
@@ -153,23 +151,8 @@ jobs:
         name: ${{matrix.platform.name}}-${{matrix.config.name}}-${{matrix.os}}
         path: attractplus-*.7z
 
-  buildAMarm:
-    name: ${{ matrix.platform.name }} ${{ matrix.config.name }} on ${{ matrix.os }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        platform:
-        - { name: armv7,   targetos: linux-arm, shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
-        - { name: aarch64, targetos: linux-arm, shell: bash, amflags: USE_DRM=1}
-        config:
-        - { name: shared, amflags: STATIC=0 }
-        - { name: static, amflags: STATIC=1 }
-        os: [ buster, bullseye ]
-        exclude:
-          - platform: { targetos: linux-arm }
-            config: { name: shared }
-
+  buildMacOS:
+    runs-on: macos-latest
     steps:
     - name: AM+ - Checkout
       uses: actions/checkout@v4
@@ -183,7 +166,57 @@ jobs:
         fe_version=
         [[ ${GITHUB_REF} =~ ^refs/tags/* ]] && fe_version="${GITHUB_REF#refs/*/}"
         echo "fe_version=${fe_version}" >> $GITHUB_OUTPUT
-    - name: Build AM+ (ARM)
+    - name: Install MacOS brew
+      run: |
+        brew update
+        brew upgrade
+        brew install pkgconfig ffmpeg libarchive libvorbis flac jpeg-turbo boost sfml
+    - name: Build AM+
+      run: |
+        make -C am -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} prefix=.. USE_SYSTEM_SFML=1
+    - name: Prepare macOS artifacts
+      if: runner.os == 'macOS'
+      run: |
+        git -C am/ fetch --unshallow
+        mkdir -p "${GITHUB_WORKSPACE}"/artifacts
+        bash am/util/osx/appbuilder.sh
+        7z a "attractplus-MacOS.7z" ./artifacts/*
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{matrix.platform.name}}-${{matrix.config.name}}-${{matrix.os}}
+        path: attractplus-*.7z
+
+  buildAMarm:
+    name: ${{ matrix.platform.name }} ${{ matrix.config.name }} on ${{ matrix.os }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        platform:
+        - { name: armv7,   targetos: linux-arm, shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
+        - { name: aarch64, targetos: linux-arm, shell: bash, amflags: USE_DRM=1}
+        config:
+        - { name: shared, amflags: STATIC=0 }
+        - { name: static, amflags: STATIC=1 }
+        #os: [ buster, bullseye, bookworm ]
+        os: [ buster ]
+        exclude:
+          - platform: { targetos: linux-arm }
+            config: { name: shared }
+
+    steps:
+    - name: AM+ - Checkout
+      uses: actions/checkout@v4
+      with:
+        path: am
+    - name: Prepare
+      id: vars
+      run: |
+        fe_version=
+        [[ ${GITHUB_REF} =~ ^refs/tags/* ]] && fe_version="${GITHUB_REF#refs/*/}"
+        echo "fe_version=${fe_version}" >> $GITHUB_OUTPUT
+    - name: Build AM+
       uses: uraimo/run-on-arch-action@v2.7.2
       with:
         arch: ${{ matrix.platform.name }}
