@@ -147,7 +147,7 @@ jobs:
       with:
         arch: none
         distro: none
-        base_image: "--platform=linux/${{ matrix.platform.name }} debian:${{ matrix.os }}"
+        base_image: "--platform=linux/${{ matrix.platform.name }} ${{ matrix.os }}/debian:${{ matrix.os }}"
         githubToken: ${{ github.token }}
         dockerRunArgs: |
           --volume "${GITHUB_WORKSPACE}/am:/am"
