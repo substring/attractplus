@@ -117,6 +117,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         platform:
         - { name: armv7,   targetos: linux-arm, shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
