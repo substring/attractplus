@@ -124,8 +124,8 @@ jobs:
         config:
         - { name: shared, amflags: STATIC=0 }
         - { name: static, amflags: STATIC=1 }
-        #os: [ buster, bullseye, bookworm ]
-        os: [ buster ]
+        os: [ buster, bullseye, bookworm ]
+        #os: [ buster ]
         exclude:
           - platform: { targetos: linux-arm }
             config: { name: shared }
