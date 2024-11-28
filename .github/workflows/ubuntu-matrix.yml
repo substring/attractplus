@@ -152,6 +152,7 @@ jobs:
         path: attractplus-*.7z
 
   buildMacOS:
+    name: MacOS build
     runs-on: macos-latest
     steps:
     - name: AM+ - Checkout
@@ -238,19 +239,8 @@ jobs:
         7z a "attractplus-${{matrix.platform.name}}-${{matrix.config.name}}-${{matrix.os}}.7z" ./artifacts/*
 
   buildAMWindows:
-    name: ${{ matrix.platform.name }} ${{ matrix.config.name }} on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        platform:
-        - { name: Windows x64, , targetos: windows,   os: ubuntu-20.04, amflags: CROSS=1 FE_WINDOWS_COMPILE=1, crossprefix: x86_64-w64-mingw32.static- }
-        config:
-        - { name: shared, amflags: STATIC=0 }
-        - { name: static, amflags: STATIC=1 }
-        exclude:
-          - platform: { targetos: windows }
-            config: { name: shared }
+    name: Windows MXE build
+    runs-on: ubuntu-20.04
 
     steps:
     - name: AM+ - Checkout
@@ -300,12 +290,12 @@ jobs:
 
     - name: Build AM+
       run: |
-        make -C am -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} ${{matrix.platform.amflags}} ${{matrix.config.amflags}} ${{env.cross_toolchain}}
+        make -C am -j$(nproc) VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} CROSS=1 FE_WINDOWS_COMPILE=1 STATIC=1 TOOLCHAIN=x86_64-w64-mingw32.static
 
     - name: Build AM+ attract-console.exe (Windows only)
       run: |
         make -C am smallclean ${{matrix.platform.amflags}} ${{matrix.config.amflags}} ${{env.cross_toolchain}}
-        make -C am -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} ${{matrix.platform.amflags}} ${{matrix.config.amflags}} ${{env.cross_toolchain}} WINDOWS_CONSOLE=1
+        make -C am -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} CROSS=1 FE_WINDOWS_COMPILE=1 STATIC=1 TOOLCHAIN=x86_64-w64-mingw32.static WINDOWS_CONSOLE=1
 
     - name: Prepare artifacts
       run: |
@@ -320,7 +310,7 @@ jobs:
         find "${GITHUB_WORKSPACE}"/am/obj/sfml/install/lib/ -name "*.dll" -o -name "*.so" -o -name "*.dylib" -exec cp -v {} "${GITHUB_WORKSPACE}"/artifacts/ \;
         cp am/attract* "${GITHUB_WORKSPACE}"/artifacts/
         cp -R am/config/* "${GITHUB_WORKSPACE}"/artifacts/
-        7z a "attractplus-${{matrix.platform.name}}-${{matrix.config.name}}.7z" ./artifacts/*
+        7z a "attractplus-Windows.7z" ./artifacts/*
  
   Release:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
