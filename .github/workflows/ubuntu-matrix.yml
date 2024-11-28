@@ -294,7 +294,7 @@ jobs:
 
     - name: Build AM+ attract-console.exe (Windows only)
       run: |
-        make -C am smallclean ${{matrix.platform.amflags}} ${{matrix.config.amflags}} ${{env.cross_toolchain}}
+        make -C am smallclean CROSS=1 FE_WINDOWS_COMPILE=1 STATIC=1 TOOLCHAIN=x86_64-w64-mingw32.static
         make -C am -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} CROSS=1 FE_WINDOWS_COMPILE=1 STATIC=1 TOOLCHAIN=x86_64-w64-mingw32.static WINDOWS_CONSOLE=1
 
     - name: Prepare artifacts
@@ -315,7 +315,7 @@ jobs:
   Release:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     name: Release to github
-    needs: [buildAMx86, buildAMarm, buildMacOS]
+    needs: [buildAMx86, buildAMarm, buildMacOS, buildAMWindows]
     runs-on: ubuntu-latest
 
     steps:
