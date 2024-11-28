@@ -28,7 +28,7 @@ jobs:
             config: { name: static }
             specifific_flags: -DCMAKE_CXX_FLAGS="-DAL_LIBTYPE_STATIC=TRUE"
           - platform: { targetos: linux-x86 }
-            os: [ ubuntu-latest, ubuntu-24.04, ubuntu-22.04, ubuntu-20.04 ]
+            os: [ ubuntu-24.04, ubuntu-22.04, ubuntu-20.04 ]
           
         exclude:
           - platform: { target-os: linux-x86 }
