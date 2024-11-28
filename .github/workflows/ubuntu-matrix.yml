@@ -149,7 +149,7 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: ${{matrix.platform.name}}-${{matrix.config.name}}
+        name: ${{matrix.platform.name}}-${{matrix.config.name}}-${{matrix.os}}
         path: attractplus-*.7z
 
   Release:
