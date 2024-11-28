@@ -13,30 +13,30 @@ jobs:
     strategy:
       matrix:
         platform:
-        - { name: Windows x64,   os: ubuntu-20.04, amflags: CROSS=1 FE_WINDOWS_COMPILE=1, crossprefix: x86_64-w64-mingw32.static- }
-        - { name: Linux x64 KMS, os: ubuntu-20.04, amflags: USE_DRM=1 }
-        - { name: Linux x64 X11, os: ubuntu-20.04 }
-        - { name: MacOS,         os: macos-latest, amflags: prefix=.. USE_SYSTEM_SFML=1, flags: -DSFML_USE_SYSTEM_DEPS=1 }
-        - { name: armv7,         os: ubuntu-20.04, archos: buster, shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
-        - { name: aarch64,       os: ubuntu-20.04, archos: buster, shell: bash, amflags: USE_DRM=1}
+        - { name: Windows x64, , targetos: windows,   os: ubuntu-20.04, amflags: CROSS=1 FE_WINDOWS_COMPILE=1, crossprefix: x86_64-w64-mingw32.static- }
+        - { name: Linux x64 KMS, targetos: linux-x86, amflags: USE_DRM=1 }
+        - { name: Linux x64 X11, targetos: linux-x86 }
+        - { name: MacOS,         targetos: mac,       os: macos-latest, amflags: prefix=.. USE_SYSTEM_SFML=1, flags: -DSFML_USE_SYSTEM_DEPS=1 }
+        - { name: armv7,         targetos: linux-arm, os: ubuntu-20.04, archos: buster, shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
+        - { name: aarch64,       targetos: linux-arm, os: ubuntu-20.04, archos: buster, shell: bash, amflags: USE_DRM=1}
         config:
         - { name: shared, amflags: STATIC=0 }
         - { name: static, amflags: STATIC=1 }
 
-        #include:
-        #- platform: { name: MacOS XCode, os: macos-latest }
-        #  config: { name: Frameworks, flags: -DSFML_BUILD_FRAMEWORKS=TRUE }
         include:
-        - platform: { name: Windows x64 }
-          config: { name: static }
-          specifific_flags: -DCMAKE_CXX_FLAGS="-DAL_LIBTYPE_STATIC=TRUE"
+          - platform: { name: Windows x64 }
+            config: { name: static }
+            specifific_flags: -DCMAKE_CXX_FLAGS="-DAL_LIBTYPE_STATIC=TRUE"
+          - platform: { targetos: linux-x86 }
+            os: [ ubuntu-latest, ubuntu-24.04, ubuntu-22.04, ubuntu-20.04 ]
+          
         exclude:
-        - platform: { os: ubuntu-20.04 }
-          config: { name: shared }
-        - platform: { os: macos-latest }
-          config: { name: static }
-        - platform: { archos: buster }
-          config: { name: shared }
+          - platform: { target-os: linux-x86 }
+            config: { name: shared }
+          - platform: { os: macos-latest }
+            config: { name: static }
+          - platform: { targetos: linux-arm }
+            config: { name: shared }
 
     steps:
     - name: AM+ - Checkout
