@@ -13,10 +13,8 @@ jobs:
     strategy:
       matrix:
         platform:
-        #- { name: Windows x64, , targetos: windows,   os: ubuntu-20.04, amflags: CROSS=1 FE_WINDOWS_COMPILE=1, crossprefix: x86_64-w64-mingw32.static- }
         - { name: Linux x64 KMS, targetos: linux-x86, amflags: USE_DRM=1 }
         - { name: Linux x64 X11, targetos: linux-x86 }
-        #- { name: MacOS,         targetos: mac,       os: macos-latest, amflags: prefix=.. USE_SYSTEM_SFML=1, flags: -DSFML_USE_SYSTEM_DEPS=1 }
         config:
         - { name: shared, amflags: STATIC=0 }
         - { name: static, amflags: STATIC=1 }
@@ -25,8 +23,6 @@ jobs:
                  
         exclude:
           - platform: { targetos: linux-x86 }
-            config: { name: shared }
-          - platform: { targetos: linux-arm }
             config: { name: shared }
 
     steps:
@@ -45,84 +41,15 @@ jobs:
         echo "fe_version=${fe_version}" >> $GITHUB_OUTPUT
 
     - name: Install Linux Dependencies
-      if: matrix.platform.targetos == 'linux-x86'
       run: |
         sudo apt update
         sudo apt install build-essential cmake pkgconf libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libavformat-dev libfontconfig1-dev libfreetype6-dev libswscale-dev libswresample-dev libarchive-dev libjpeg-dev libglu1-mesa-dev libegl1-mesa-dev libgbm-dev libdrm-dev libcurl4-gnutls-dev libboost-system-dev libboost-filesystem-dev
-
-    - name: Install Linux MXE for Windows cross-building
-      if: matrix.targetos == 'windows'
-      run: |
-        sudo apt-get install \
-          software-properties-common \
-          lsb-release
-        sudo apt-key adv \
-          --keyserver keyserver.ubuntu.com \
-          --recv-keys 86B72ED9 && \
-        sudo add-apt-repository \
-          "deb [arch=amd64] https://pkg.mxe.cc/repos/apt `lsb_release -sc` main" && \
-        sudo apt-get update
-        sudo apt-get install \
-          mxe-x86-64-w64-mingw32.static-cc \
-          mxe-x86-64-w64-mingw32.static-openal \
-          mxe-x86-64-w64-mingw32.static-flac \
-          mxe-x86-64-w64-mingw32.static-vorbis \
-          mxe-x86-64-w64-mingw32.static-freetype \
-          mxe-x86-64-w64-mingw32.static-freetype-bootstrap \
-          mxe-x86-64-w64-mingw32.static-libarchive \
-          mxe-x86-64-w64-mingw32.static-curl \
-          mxe-x86-64-w64-mingw32.static-openjpeg \
-          mxe-x86-64-w64-mingw32.static-boost
-        sudo apt-get install ./am/extlibs/mxe/mxe-x86-64-w64-mingw32.static-gcc_11.2.0-focal.deb
-        sudo apt-get install ./am/extlibs/mxe/mxe-x86-64-w64-mingw32.static-brotli_1.1.0.deb
-        sudo apt-get install ./am/extlibs/mxe/mxe-x86-64-w64-mingw32.static-ffmpeg_7.0.2.deb
-        sudo ln -s /usr/lib/mxe/usr/bin/x86_64-w64-mingw32.static-gcc /usr/lib/mxe/usr/bin/x86_64-w64-mingw32.static-cc
-        sudo pip install mingw-ldd
-        echo "/usr/lib/mxe/usr/bin" >> $GITHUB_PATH
-        echo "cross_prefix=x86_64-w64-mingw32.static-" >> $GITHUB_ENV
-        echo "cross_toolchain=TOOLCHAIN=x86_64-w64-mingw32.static" >> $GITHUB_ENV
-
-    - name: Install MacOS brew
-      if: runner.os == 'macOS'
-      run: |
-        brew update
-        brew upgrade
-        brew install pkgconfig ffmpeg libarchive libvorbis flac jpeg-turbo boost sfml
-
-    - name: Build AM+ (ARM)
-      if: matrix.targetos == 'linux-arm'
-      uses: uraimo/run-on-arch-action@v2.7.2
-      with:
-        arch: ${{ matrix.platform.name }}
-        distro: ${{ matrix.os }}
-        githubToken: ${{ github.token }}
-        dockerRunArgs: |
-          --volume "${GITHUB_WORKSPACE}/am:/am"
-        install: |
-          apt-get update -y -q
-          apt-get install -y -q build-essential cmake pkgconf libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libavformat-dev libfontconfig1-dev libfreetype6-dev libswscale-dev libswresample-dev libarchive-dev libjpeg-dev libglu1-mesa-dev libgbm-dev libdrm-dev libegl1-mesa-dev libcurl4-gnutls-dev libboost-filesystem-dev libboost-system-dev
-        run: |
-          make -C am -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} ${{matrix.platform.amflags}} ${{matrix.config.amflags}} ${{env.cross_toolchain}}
-
-    #~ - name: MacOS switch to GCC
-      #~ if: runner.os == 'macOS'
-      #~ run: |
-        #~ echo "CC=/usr/local/bin/gcc-10" >> $GITHUB_ENV
-        #~ echo "CXX=/usr/local/bin/g++-10" >> $GITHUB_ENV
-        #~ echo "AR=/usr/local/bin/ar-10" >> $GITHUB_ENV
 
     - name: Build AM+
       run: |
         make -C am -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} ${{matrix.platform.amflags}} ${{matrix.config.amflags}} ${{env.cross_toolchain}}
 
-    - name: Build AM+ attract-console.exe (Windows only)
-      if: matrix.platform.name == 'Windows x64'
-      run: |
-        make -C am smallclean ${{matrix.platform.amflags}} ${{matrix.config.amflags}} ${{env.cross_toolchain}}
-        make -C am -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} ${{matrix.platform.amflags}} ${{matrix.config.amflags}} ${{env.cross_toolchain}} WINDOWS_CONSOLE=1
-
     - name: Prepare artifacts
-      if: runner.os != 'macOS'
       run: |
         mkdir -p "${GITHUB_WORKSPACE}"/artifacts
         for e in "${GITHUB_WORKSPACE}"/am/*.exe ; do
@@ -136,14 +63,6 @@ jobs:
         cp am/attract* "${GITHUB_WORKSPACE}"/artifacts/
         cp -R am/config/* "${GITHUB_WORKSPACE}"/artifacts/
         7z a "attractplus-${{matrix.platform.name}}-${{matrix.config.name}}-${{matrix.os}}.7z" ./artifacts/*
-
-    - name: Prepare macOS artifacts
-      if: runner.os == 'macOS'
-      run: |
-        git -C am/ fetch --unshallow
-        mkdir -p "${GITHUB_WORKSPACE}"/artifacts
-        bash am/util/osx/appbuilder.sh
-        7z a "attractplus-${{matrix.platform.name}}-${{matrix.config.name}}.7z" ./artifacts/*
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
@@ -172,11 +91,16 @@ jobs:
         brew update
         brew upgrade
         brew install pkgconfig ffmpeg libarchive libvorbis flac jpeg-turbo boost sfml
+    #~ - name: MacOS switch to GCC
+      #~ if: runner.os == 'macOS'
+      #~ run: |
+        #~ echo "CC=/usr/local/bin/gcc-10" >> $GITHUB_ENV
+        #~ echo "CXX=/usr/local/bin/g++-10" >> $GITHUB_ENV
+        #~ echo "AR=/usr/local/bin/ar-10" >> $GITHUB_ENV
     - name: Build AM+
       run: |
         make -C am -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} prefix=.. USE_SYSTEM_SFML=1 STATIC=0
-    - name: Prepare macOS artifacts
-      if: runner.os == 'macOS'
+    - name: Prepare artifacts
       run: |
         git -C am/ fetch --unshallow
         mkdir -p "${GITHUB_WORKSPACE}"/artifacts
@@ -185,7 +109,7 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: ${{matrix.platform.name}}-${{matrix.config.name}}-${{matrix.os}}
+        name: MacOS
         path: attractplus-*.7z
 
   buildAMarm:
@@ -236,7 +160,12 @@ jobs:
         find "${GITHUB_WORKSPACE}"/am/obj/sfml/install/lib/ -name "*.dll" -o -name "*.so" -o -name "*.dylib" -exec cp -v {} "${GITHUB_WORKSPACE}"/artifacts/ \;
         cp am/attract* "${GITHUB_WORKSPACE}"/artifacts/
         cp -R am/config/* "${GITHUB_WORKSPACE}"/artifacts/
-        7z a "attractplus-${{matrix.platform.name}}-${{matrix.config.name}}-${{matrix.os}}.7z" ./artifacts/*
+        7z a "attractplus-${{matrix.platform.name}}-${{matrix.os}}.7z" ./artifacts/*
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{matrix.platform.name}}-${{matrix.os}}
+        path: attractplus-*.7z
 
   buildAMWindows:
     name: Windows MXE build
@@ -311,7 +240,12 @@ jobs:
         cp am/attract* "${GITHUB_WORKSPACE}"/artifacts/
         cp -R am/config/* "${GITHUB_WORKSPACE}"/artifacts/
         7z a "attractplus-Windows.7z" ./artifacts/*
- 
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Windows
+        path: attractplus-*.7z
+
   Release:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     name: Release to github
