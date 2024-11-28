@@ -6,7 +6,7 @@ env:
   PKG_CONFIG_PATH_x86_64_w64_mingw32_static: /usr/lib/mxe/usr/x86_64-w64-mingw32.static/lib/pkgconfig/
 
 jobs:
-  buildAM:
+  buildAMx86:
     name: ${{ matrix.platform.name }} ${{ matrix.config.name }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
 
@@ -23,11 +23,9 @@ jobs:
         - { name: shared, amflags: STATIC=0 }
         - { name: static, amflags: STATIC=1 }
         
-        include:
-          - os: [ ubuntu-24.04, ubuntu-22.04, ubuntu-20.04 ]
-            targetos: linux-x86
-          - os: [ bookwork, bullseye, buster ]
-            targetos: linux-arm
+        os: [ ubuntu-24.04, ubuntu-22.04, ubuntu-20.04 ]
+        os: [ bookwork, bullseye, buster ]
+        
          
         exclude:
           - platform: { targetos: linux-x86 }
@@ -157,10 +155,61 @@ jobs:
         name: ${{matrix.platform.name}}-${{matrix.config.name}}-${{matrix.os}}
         path: attractplus-*.7z
 
+  buildAMarm:
+    name: ${{ matrix.platform.name }} ${{ matrix.config.name }} on ${{ matrix.os }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        platform:
+        - { name: armv7,   targetos: linux-arm, shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
+        - { name: aarch64, targetos: linux-arm, shell: bash, amflags: USE_DRM=1}
+        config:
+        - { name: shared, amflags: STATIC=0 }
+        - { name: static, amflags: STATIC=1 }
+        os: [ bookwork, bullseye, buster ]
+        exclude:
+          - platform: { targetos: linux-arm }
+            config: { name: shared }
+
+    steps:
+    - name: AM+ - Checkout
+      uses: actions/checkout@v4
+      with:
+        path: am
+    - name: Prepare
+      id: vars
+      run: |
+        which nproc && nbproc=$(nproc) || nbproc=$(getconf _NPROCESSORS_ONLN)
+        echo "nbproc=${nbproc}" >> $GITHUB_OUTPUT
+        fe_version=
+        [[ ${GITHUB_REF} =~ ^refs/tags/* ]] && fe_version="${GITHUB_REF#refs/*/}"
+        echo "fe_version=${fe_version}" >> $GITHUB_OUTPUT
+    - name: Build AM+ (ARM)
+      uses: uraimo/run-on-arch-action@v2.7.2
+      with:
+        arch: ${{ matrix.platform.name }}
+        distro: ${{ matrix.os }}
+        githubToken: ${{ github.token }}
+        dockerRunArgs: |
+          --volume "${GITHUB_WORKSPACE}/am:/am"
+        install: |
+          apt-get update -y -q
+          apt-get install -y -q build-essential cmake pkgconf libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libavformat-dev libfontconfig1-dev libfreetype6-dev libswscale-dev libswresample-dev libarchive-dev libjpeg-dev libglu1-mesa-dev libgbm-dev libdrm-dev libegl1-mesa-dev libcurl4-gnutls-dev libboost-filesystem-dev libboost-system-dev
+        run: |
+          make -C am -j$(nproc) VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} ${{matrix.platform.amflags}} ${{matrix.config.amflags}}
+    - name: Prepare artifacts
+      run: |
+        mkdir -p "${GITHUB_WORKSPACE}"/artifacts
+        find "${GITHUB_WORKSPACE}"/am/obj/sfml/install/lib/ -name "*.dll" -o -name "*.so" -o -name "*.dylib" -exec cp -v {} "${GITHUB_WORKSPACE}"/artifacts/ \;
+        cp am/attract* "${GITHUB_WORKSPACE}"/artifacts/
+        cp -R am/config/* "${GITHUB_WORKSPACE}"/artifacts/
+        7z a "attractplus-${{matrix.platform.name}}-${{matrix.config.name}}-${{matrix.os}}.7z" ./artifacts/*
+ 
   Release:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     name: Release to github
-    needs: buildAM
+    needs: buildAMx86 buildAMarm
     runs-on: ubuntu-latest
 
     steps:
