@@ -136,7 +136,7 @@ jobs:
         find "${GITHUB_WORKSPACE}"/am/obj/sfml/install/lib/ -name "*.dll" -o -name "*.so" -o -name "*.dylib" -exec cp -v {} "${GITHUB_WORKSPACE}"/artifacts/ \;
         cp am/attract* "${GITHUB_WORKSPACE}"/artifacts/
         cp -R am/config/* "${GITHUB_WORKSPACE}"/artifacts/
-        7z a "attract-${{matrix.platform.name}}-${{matrix.config.name}}.7z" ./artifacts/*
+        7z a "attractplus-${{matrix.platform.name}}-${{matrix.config.name}}-${{matrix.os}}.7z" ./artifacts/*
 
     - name: Prepare macOS artifacts
       if: runner.os == 'macOS'
@@ -144,13 +144,13 @@ jobs:
         git -C am/ fetch --unshallow
         mkdir -p "${GITHUB_WORKSPACE}"/artifacts
         bash am/util/osx/appbuilder.sh
-        7z a "attract-${{matrix.platform.name}}-${{matrix.config.name}}.7z" ./artifacts/*
+        7z a "attractplus-${{matrix.platform.name}}-${{matrix.config.name}}.7z" ./artifacts/*
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: ${{matrix.platform.name}}-${{matrix.config.name}}
-        path: attract-*.7z
+        path: attractplus-*.7z
 
   Release:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
@@ -172,7 +172,7 @@ jobs:
         mkdir -p "${GITHUB_WORKSPACE}"/artifacts_for_release
         find "${GITHUB_WORKSPACE}"/artifacts/ -name "*.7z" | while read f ; do
           p="$(basename "$f")"
-          cp -v "$f" "${GITHUB_WORKSPACE}/artifacts_for_release/attract-${GITHUB_REF#refs/*/}-${p#attract-}"
+          cp -v "$f" "${GITHUB_WORKSPACE}/artifacts_for_release/attractplus-${GITHUB_REF#refs/*/}-${p#attract-}"
         done
 
     - name: Create Release
@@ -183,4 +183,4 @@ jobs:
         name: Attract Mode Plus ${{ steps.prepare_artifacts.outputs.current_tag }}
         draft: true
         prerelease: false
-        files: artifacts_for_release/attract-*.7z
+        files: artifacts_for_release/attractplus-*.7z
