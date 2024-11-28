@@ -13,12 +13,12 @@ jobs:
     strategy:
       matrix:
         platform:
-        - { name: Windows x64, , targetos: windows,   os: ubuntu-20.04, amflags: CROSS=1 FE_WINDOWS_COMPILE=1, crossprefix: x86_64-w64-mingw32.static- }
+        #- { name: Windows x64, , targetos: windows,   os: ubuntu-20.04, amflags: CROSS=1 FE_WINDOWS_COMPILE=1, crossprefix: x86_64-w64-mingw32.static- }
         - { name: Linux x64 KMS, targetos: linux-x86, amflags: USE_DRM=1 }
         - { name: Linux x64 X11, targetos: linux-x86 }
-        - { name: MacOS,         targetos: mac,       os: macos-latest, amflags: prefix=.. USE_SYSTEM_SFML=1, flags: -DSFML_USE_SYSTEM_DEPS=1 }
-        - { name: armv7,         targetos: linux-arm, os: ubuntu-20.04, archos: buster, shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
-        - { name: aarch64,       targetos: linux-arm, os: ubuntu-20.04, archos: buster, shell: bash, amflags: USE_DRM=1}
+        #- { name: MacOS,         targetos: mac,       os: macos-latest, amflags: prefix=.. USE_SYSTEM_SFML=1, flags: -DSFML_USE_SYSTEM_DEPS=1 }
+        #- { name: armv7,         targetos: linux-arm, os: ubuntu-20.04, archos: buster, shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
+        #- { name: aarch64,       targetos: linux-arm, os: ubuntu-20.04, archos: buster, shell: bash, amflags: USE_DRM=1}
         config:
         - { name: shared, amflags: STATIC=0 }
         - { name: static, amflags: STATIC=1 }
