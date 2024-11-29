@@ -144,9 +144,9 @@ jobs:
     - name: Build AM+
       uses: uraimo/run-on-arch-action@v2.7.2
       with:
-        arch: none
-        distro: none
-        base_image: "--platform=linux/${{ matrix.platform.name }} ${{ matrix.platform.arch }}/debian:${{ matrix.os }}"
+        arch: ${{ matrix.platform.name }}
+        distro: ${{ matrix.os }}
+        #base_image: "--platform=linux/${{ matrix.platform.name }} ${{ matrix.platform.arch }}/debian:${{ matrix.os }}"
         githubToken: ${{ github.token }}
         dockerRunArgs: |
           --volume "${GITHUB_WORKSPACE}/am:/am"
