@@ -120,8 +120,8 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-        - { name: armv7,   arch: arm32v7, shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
-        - { name: aarch64, arch: arm64v8, shell: bash, amflags: USE_DRM=1}
+        - { name: armv7,   arch: arm32v7, pf: arm/v7,  shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
+        - { name: aarch64, arch: arm64v8, pf: aarch64, shell: bash, amflags: USE_DRM=1}
         config:
         - { name: shared, amflags: STATIC=0 }
         - { name: static, amflags: STATIC=1 }
@@ -147,6 +147,7 @@ jobs:
         arch: ${{ matrix.platform.name }}
         distro: ${{ matrix.os }}
         #base_image: "--platform=linux/${{ matrix.platform.name }} ${{ matrix.platform.arch }}/debian:${{ matrix.os }}"
+        base_image: "--platform=linux/${{ matrix.platform.pf }}"
         githubToken: ${{ github.token }}
         dockerRunArgs: |
           --volume "${GITHUB_WORKSPACE}/am:/am"
