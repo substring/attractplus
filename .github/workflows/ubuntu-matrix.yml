@@ -142,7 +142,7 @@ jobs:
         [[ ${GITHUB_REF} =~ ^refs/tags/* ]] && fe_version="${GITHUB_REF#refs/*/}"
         echo "fe_version=${fe_version}" >> $GITHUB_OUTPUT
     - name: Build AM+
-      uses: uraimo/run-on-arch-action@v2.8.0
+      uses: uraimo/run-on-arch-action@v2
       with:
         arch: ${{ matrix.platform.name }}
         distro: ${{ matrix.os }}
