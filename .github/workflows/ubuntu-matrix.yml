@@ -120,7 +120,7 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-        - { name: armv7,   arch: arm32v7, shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
+        - { name: arm/v7,   arch: arm32v7, shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
         - { name: aarch64, arch: arm64v8, shell: bash, amflags: USE_DRM=1}
         config:
         - { name: shared, amflags: STATIC=0 }
