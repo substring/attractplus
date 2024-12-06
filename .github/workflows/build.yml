@@ -70,6 +70,54 @@ jobs:
         name: ${{matrix.platform.name}}-${{matrix.config.name}}-${{matrix.os}}
         path: attractplus-*.7z
 
+  PackageAMx86:
+    #if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+    name: ${{ matrix.platform.name }} ${{ matrix.config.name }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    needs: BuildAMx86
+
+    strategy:
+      matrix:
+        platform:
+        - { name: Linux x64 KMS, targetos: linux-x86, amflags: USE_DRM=1 }
+        #- { name: Linux x64 X11, targetos: linux-x86 }
+        config:
+        - { name: shared, amflags: STATIC=0 }
+        - { name: static, amflags: STATIC=1 }
+
+        os: [ ubuntu-24.04, ubuntu-22.04, ubuntu-20.04 ]
+
+        exclude:
+          - platform: { targetos: linux-x86 }
+            config: { name: shared }
+
+    steps:
+    - name: AM+ - Checkout
+      uses: actions/checkout@v4
+      with:
+        path: am
+
+    - name: Prepare
+      id: vars
+      run: |
+        which nproc && nbproc=$(nproc) || nbproc=$(getconf _NPROCESSORS_ONLN)
+        echo "nbproc=${nbproc}" >> $GITHUB_OUTPUT
+        fe_version=
+        [[ ${GITHUB_REF} =~ ^refs/tags/* ]] && fe_version="${GITHUB_REF#refs/*/}"
+        echo "fe_version=${fe_version}" >> $GITHUB_OUTPUT
+
+    - name: Install Linux Dependencies
+      run: |
+        sudo apt update
+        sudo apt install build-essential akeroot dpkg-dev
+
+    - name: Package AM+
+      run: |
+        cd am
+        dpkg-buildpackage -rfakeroot -b -us -uc
+        cd ..
+        mv attract_plus_${{ steps.vars.outputs.fe_version }}_amd64.deb attract_plus_${{ steps.vars.outputs.fe_version }}_${{ matrix.os }}_amd64.deb
+
   buildMacOS:
     name: MacOS build
     runs-on: macos-latest
@@ -251,7 +299,7 @@ jobs:
   Release:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     name: Release to github
-    needs: [buildAMx86, buildAMarm, buildMacOS, buildAMWindows]
+    needs: [PackageAMx86, buildAMarm, buildMacOS, buildAMWindows]
     runs-on: ubuntu-latest
 
     steps:
