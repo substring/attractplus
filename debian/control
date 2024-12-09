@@ -8,7 +8,7 @@ Build-Depends: debhelper (>= 10), pkgconf, git,
  libjpeg62-turbo-dev | libjpeg-turbo8-dev, cmake, libudev-dev,
  libxrandr-dev, libopenal-dev, libswscale-dev, libxinerama-dev,
  libcurl4-openssl-dev | libcurl4-nss-dev | libcurl4-gnutls-dev,
- libexpat1-dev, libgl1-mesa-dev, libgbm-dev, libvorbis-dev,
+ libexpat1-dev, libgl1-mesa-dev, libgbm-dev, libdrm-dev, libvorbis-dev,
  libflac-dev, libboost-system-dev, libboost-filesystem-dev
 Standards-Version: 3.9.5
 Homepage: http://attractmode.org
