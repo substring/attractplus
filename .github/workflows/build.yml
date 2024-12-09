@@ -100,11 +100,11 @@ jobs:
     - name: Prepare
       id: vars
       run: |
-        which nproc && nbproc=$(nproc) || nbproc=$(getconf _NPROCESSORS_ONLN)
-        echo "nbproc=${nbproc}" >> $GITHUB_OUTPUT
+        deb_version="$(head -1 am/debian/changelog | egrep -o "[0-9]+\.[0-9]+\.[0-9]+")"
         fe_version=
         [[ ${GITHUB_REF} =~ ^refs/tags/* ]] && fe_version="${GITHUB_REF#refs/*/}"
         echo "fe_version=${fe_version}" >> $GITHUB_OUTPUT
+        echo "deb_version=${deb_version}" >> $GITHUB_OUTPUT
 
     - name: Package AM+
       uses: jtdor/build-deb-action@v1
@@ -121,7 +121,7 @@ jobs:
         version="$(head -1 debian/changelog | egrep -o "[0-9]+\.[0-9]+\.[0-9]+")"
         # dpkg-buildpackage -rfakeroot -b -us -uc
         # cd ..
-        mv ./debian/artifacts/attract_plus_$version_amd64.deb attract_plus_$version_${{ matrix.os }}_amd64.deb
+        mv ./debian/artifacts/attract_plus_${version}_amd64.deb attract_plus_${version}_${{ matrix.os }}_amd64.deb
 
   buildMacOS:
     name: MacOS build
