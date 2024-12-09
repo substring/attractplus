@@ -225,6 +225,62 @@ jobs:
         name: ${{matrix.platform.name}}-${{matrix.os}}
         path: attractplus-*.7z
 
+  PackageAMarm:
+    #if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+    name: Package ${{ matrix.platform.name }} ${{ matrix.config.name }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    needs: BuildAMarm
+
+    strategy:
+      matrix:
+        platform:
+        - { name: armv7,   arch: armhf }
+        - { name: aarch64, arch: arm64 }
+        config:
+        - { name: shared, amflags: STATIC=0 }
+        - { name: static, amflags: STATIC=1 }
+        os: [ buster, bullseye, bookworm ]
+        #os: [ buster ]
+        exclude:
+          - config: { name: shared }
+
+    steps:
+    - name: AM+ - Checkout
+      uses: actions/checkout@v4
+      with:
+        path: am
+
+    - name: Prepare
+      id: vars
+      run: |
+        deb_version="$(head -1 am/debian/changelog | egrep -o "[0-9]+\.[0-9]+\.[0-9]+")"
+        fe_version=
+        [[ ${GITHUB_REF} =~ ^refs/tags/* ]] && fe_version="${GITHUB_REF#refs/*/}"
+        echo "fe_version=${fe_version}" >> $GITHUB_OUTPUT
+        echo "deb_version=${deb_version}" >> $GITHUB_OUTPUT
+
+    - name: Package AM+
+      uses: jtdor/build-deb-action@v1
+      env:
+        DEB_BUILD_OPTIONS: noautodbgsym
+      with:
+        buildpackage-opts: --build=binary --no-sign
+        source-dir: am
+        host-arch: ${{ matrix.platform.arch }}
+        docker-image: debian:${{ matrix.os }}-slim
+
+    - name: Rename AM+
+      run: |
+        find ./ -name '*.deb'
+        version="$(head -1 am/debian/changelog | egrep -o "[0-9]+\.[0-9]+\.[0-9]+")"
+        cp "./debian/artifacts/attractplus_${version}_amd64.deb" "attractplus_${version}_${{ matrix.os }}_amd64.deb"
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        path: ./
+        name: "attractplus_${{ steps.vars.outputs.deb_version }}_${{ matrix.os }}_amd64.deb"
+
   buildAMWindows:
     name: Windows MXE build
     runs-on: ubuntu-20.04
