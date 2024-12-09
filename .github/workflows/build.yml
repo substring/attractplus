@@ -72,7 +72,7 @@ jobs:
 
   PackageAMx86:
     #if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
-    name: ${{ matrix.platform.name }} ${{ matrix.config.name }} on ${{ matrix.os }}
+    name: Package ${{ matrix.platform.name }} ${{ matrix.config.name }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     needs: BuildAMx86
 
@@ -106,10 +106,6 @@ jobs:
         [[ ${GITHUB_REF} =~ ^refs/tags/* ]] && fe_version="${GITHUB_REF#refs/*/}"
         echo "fe_version=${fe_version}" >> $GITHUB_OUTPUT
 
-    - name: Install Linux Dependencies
-      run: |
-        sudo apt update
-        sudo apt install build-essential fakeroot dpkg-dev cmake pkgconf libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libavformat-dev libfontconfig1-dev libfreetype6-dev libswscale-dev libswresample-dev libarchive-dev libjpeg-dev libglu1-mesa-dev libegl1-mesa-dev libgbm-dev libdrm-dev libcurl4-gnutls-dev libboost-system-dev libboost-filesystem-dev libxinerama-dev
     - name: Package AM+
       uses: jtdor/build-deb-action@v1
       env:
@@ -117,12 +113,15 @@ jobs:
       with:
         buildpackage-opts: --build=binary --no-sign
         source-dir: am
-    - name: Package AM+
+
+    - name: Rename AM+
       run: |
+        find ./ -name '*.deb'
         cd am
+        version="$(head -1 debian/changelog | egrep -o "[0-9]+\.[0-9]+\.[0-9]+")"
         # dpkg-buildpackage -rfakeroot -b -us -uc
         # cd ..
-        mv attract_plus_${{ steps.vars.outputs.fe_version }}_amd64.deb attract_plus_${{ steps.vars.outputs.fe_version }}_${{ matrix.os }}_amd64.deb
+        mv attract_plus_$version_amd64.deb attract_plus_$version_${{ matrix.os }}_amd64.deb
 
   buildMacOS:
     name: MacOS build
