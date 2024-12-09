@@ -110,12 +110,18 @@ jobs:
       run: |
         sudo apt update
         sudo apt install build-essential fakeroot dpkg-dev cmake pkgconf libxrandr-dev libxcursor-dev libudev-dev libopenal-dev libflac-dev libvorbis-dev libgl1-mesa-dev libavformat-dev libfontconfig1-dev libfreetype6-dev libswscale-dev libswresample-dev libarchive-dev libjpeg-dev libglu1-mesa-dev libegl1-mesa-dev libgbm-dev libdrm-dev libcurl4-gnutls-dev libboost-system-dev libboost-filesystem-dev libxinerama-dev
-
+    - name: Packag AM+
+      uses: jtdor/build-deb-action@v1
+        env:
+          DEB_BUILD_OPTIONS: noautodbgsym
+        with:
+          buildpackage-opts: --build=binary --no-sign
+          source-dir: am
     - name: Package AM+
       run: |
         cd am
-        dpkg-buildpackage -rfakeroot -b -us -uc
-        cd ..
+        # dpkg-buildpackage -rfakeroot -b -us -uc
+        # cd ..
         mv attract_plus_${{ steps.vars.outputs.fe_version }}_amd64.deb attract_plus_${{ steps.vars.outputs.fe_version }}_${{ matrix.os }}_amd64.deb
 
   buildMacOS:
