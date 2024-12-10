@@ -62,7 +62,7 @@
 #WINDOWS_XP=1
 
 ifeq ($(FE_VERSION),)
-override FE_VERSION := v3.0.9
+override FE_VERSION := v3.1.0
 else
 $(info user set version on command line)
 override FE_VERSION := v$(FE_VERSION)
@@ -284,7 +284,7 @@ ifneq ($(FE_WINDOWS_COMPILE),1)
 else
  LIBS += -lopengl32 -lgdi32
  LIBS += -L$(EXTLIBS_DIR)/openal-soft
- LIBS += -lopengl32 -lFLAC -lvorbisfile -lopenal32-s
+ LIBS += -lopengl32 -lFLAC -lvorbisfile -lopenal32-s -lwinmm
 endif
 
 

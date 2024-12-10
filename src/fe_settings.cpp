@@ -3825,7 +3825,6 @@ bool gather_artwork_filenames(
 		// FeLog() << "directory_exists()" << " " << clk.getElapsedTime().asMicroseconds() << std::endl;
 	}
 
-	if ( image_only ) vids.clear();
 	return ( !images.empty() || !vids.empty() );
 }
 
