@@ -778,6 +778,9 @@ void FeTextureContainer::load_file( const char *n )
 
     std::replace( filename.begin(), filename.end(), '\\', '/' );
 
+	if( m_file_name == filename )
+		return;
+
 	FeAsyncLoader &al = FeAsyncLoader::get_al();
 	clear();
 	clear_texture();
