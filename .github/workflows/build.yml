@@ -111,7 +111,7 @@ jobs:
       env:
         DEB_BUILD_OPTIONS: noautodbgsym
       with:
-        buildpackage-opts: --build=binary --no-sign --no-pre-clean
+        buildpackage-opts: --build=binary --no-pre-clean --no-sign
         source-dir: am
 
     - name: Rename AM+
