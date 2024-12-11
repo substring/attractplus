@@ -278,7 +278,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         path: ./
-        name: "attractplus_${{ steps.vars.outputs.deb_version }}_${{ matrix.os }}_amd64.deb"
+        name: "attractplus_${{ steps.vars.outputs.deb_version }}_${{ matrix.os }}_${{ matrix.platform.arch }}.deb"
 
   buildAMWindows:
     name: Windows MXE build
