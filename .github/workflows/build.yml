@@ -201,8 +201,6 @@ jobs:
       with:
         arch: ${{ matrix.platform.name }}
         distro: ${{ matrix.os }}
-        #base_image: "--platform=linux/${{ matrix.platform.name }} ${{ matrix.platform.arch }}/debian:${{ matrix.os }}"
-        #base_image: "--platform=linux/${{ matrix.platform.pf }}"
         githubToken: ${{ github.token }}
         dockerRunArgs: |
           --volume "${GITHUB_WORKSPACE}/am:/am"
@@ -277,7 +275,7 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        path: ./
+        path: "./attractplus_${{ steps.vars.outputs.deb_version }}_${{ matrix.os }}_${{ matrix.platform.arch }}.deb"
         name: "attractplus_${{ steps.vars.outputs.deb_version }}_${{ matrix.os }}_${{ matrix.platform.arch }}.deb"
 
   buildAMWindows:
