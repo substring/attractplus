@@ -413,7 +413,9 @@ LIBS += -lfreetype -lpthread
 ifeq ($(FE_WINDOWS_COMPILE),1)
  LIBS += -lboost_system-mt -lboost_filesystem-mt
 else ifeq ($(FE_MACOSX_COMPILE),1)
+ LIBS += -L$(shell brew --prefix)/lib
  LIBS += -lboost_system -lboost_filesystem
+ CFLAGS += $(shell $(PKG_CONFIG) --cflags boost_system boost_filesystem)
 else
  LIBS += -l:libboost_filesystem.a -l:libboost_system.a
 endif

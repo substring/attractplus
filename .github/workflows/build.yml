@@ -16,7 +16,7 @@ jobs:
         - { name: Windows x64,   os: ubuntu-20.04, amflags: CROSS=1 FE_WINDOWS_COMPILE=1, crossprefix: x86_64-w64-mingw32.static- }
         - { name: Linux x64 KMS, os: ubuntu-20.04, amflags: USE_DRM=1 }
         - { name: Linux x64 X11, os: ubuntu-20.04 }
-        - { name: MacOS,         os: macos-12, amflags: prefix=.., flags: -DSFML_USE_SYSTEM_DEPS=1 }
+        - { name: MacOS,         os: macos-latest, amflags: prefix=.. USE_SYSTEM_SFML=1, flags: -DSFML_USE_SYSTEM_DEPS=1 }
         - { name: armv7,         os: ubuntu-20.04, archos: buster, shell: bash, amflags: USE_DRM=1 USE_MMAL=1}
         - { name: aarch64,       os: ubuntu-20.04, archos: buster, shell: bash, amflags: USE_DRM=1}
         config:
@@ -93,7 +93,7 @@ jobs:
     - name: Install MacOS brew
       if: runner.os == 'macOS'
       run: |
-        brew install pkg-config ffmpeg libarchive libvorbis flac jpeg-turbo openal-soft boost
+        brew install pkg-config ffmpeg libarchive libvorbis flac jpeg-turbo openal-soft boost sfml
 
     - name: Build AM+ (ARM)
       if: matrix.platform.name == 'armv7' || matrix.platform.name == 'aarch64'
@@ -121,7 +121,7 @@ jobs:
       run: |
         make -C am -j${{ steps.vars.outputs.nbproc }} VERBOSE=1 FE_VERSION=${{ steps.vars.outputs.fe_version }} ${{matrix.platform.amflags}} ${{matrix.config.amflags}} ${{env.cross_toolchain}}
       env:
-        PKG_CONFIG_PATH: "/usr/local/opt/openal-soft/lib/pkgconfig"
+        PKG_CONFIG_PATH: "/opt/homebrew/opt/openal-soft/lib/pkgconfig"
 
     - name: Build AM+ attract-console.exe (Windows only)
       if: matrix.platform.name == 'Windows x64'
