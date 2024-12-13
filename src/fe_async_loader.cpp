@@ -82,6 +82,12 @@ int FeAsyncLoader::get_active_ref_count( int pos )
 	return (*it).second->get_ref();
 }
 
+void FeAsyncLoader::set_cache_size( size_t size )
+{
+	ulock_t lock( m_mutex );
+	m_cache_size = size;
+}
+
 bool FeAsyncLoader::done()
 {
 	if ( !m_done )
@@ -105,6 +111,7 @@ void FeAsyncLoader::notify()
 FeAsyncLoader::FeAsyncLoader()
 	: m_running( true ),
 	m_done( true ),
+	m_cache_size ( 0 ),
 	m_resources_active{},
 	m_resources_cached{},
 	m_resources_map{},

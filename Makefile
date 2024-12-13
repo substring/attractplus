@@ -164,7 +164,6 @@ _DEP =\
 	fe_vm.hpp \
 	fe_blend.hpp \
 	path_cache.hpp \
-	image_loader.hpp \
 	base64.hpp \
 	zip.hpp
 
@@ -202,7 +201,6 @@ _OBJ =\
 	fe_blend.o \
 	zip.o \
 	path_cache.o \
-	image_loader.o \
 	base64.o \
 	main.o
 
