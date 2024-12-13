@@ -152,19 +152,22 @@ public:
 	int get_cached_ref_count( int );
 	int get_active_ref_count( int );
 
+	void set_cache_size( size_t size );
+
 private:
 	FeAsyncLoader();
 	std::thread m_thread;
 	std::mutex m_mutex;
 	std::condition_variable m_condition;
 
+	bool m_running;
+	bool m_done;
+	size_t m_cache_size;
 	list_t m_resources_active;
 	list_t m_resources_cached;
 	map_t m_resources_map;
 	std::queue< std::pair< std::string, EntryType >> m_queue;
 
-	bool m_done;
-	bool m_running;
 	void thread_loop();
 };
 

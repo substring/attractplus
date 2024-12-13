@@ -40,7 +40,6 @@
 
 #include "fe_util.hpp"
 #include "fe_util_sq.hpp"
-#include "image_loader.hpp"
 #include "fe_async_loader.hpp"
 #include "zip.hpp"
 
@@ -976,15 +975,15 @@ bool FeVM::on_new_layout()
 		.Prop( _SC("height"), &FeMonitor::get_height )
 	);
 
-	fe.Bind( _SC("ImageCache"), Class <FeImageLoader, NoConstructor>()
-		.Prop( _SC("max_size"), &FeImageLoader::cache_max )
-		.Prop( _SC("size"), &FeImageLoader::cache_size )
-		.Prop( _SC("count"), &FeImageLoader::cache_count )
-		.Func( _SC("add_image"), &FeImageLoader::cache_image )
-		.Func( _SC("name_at"), &FeImageLoader::cache_get_name_at )
-		.Func( _SC("size_at"), &FeImageLoader::cache_get_size_at )
-		.Prop( _SC("bg_load"), &FeImageLoader::get_background_loading, &FeImageLoader::set_background_loading )
-	);
+	// fe.Bind( _SC("ImageCache"), Class <FeImageLoader, NoConstructor>()
+	// 	.Prop( _SC("max_size"), &FeImageLoader::cache_max )
+	// 	.Prop( _SC("size"), &FeImageLoader::cache_size )
+	// 	.Prop( _SC("count"), &FeImageLoader::cache_count )
+	// 	.Func( _SC("add_image"), &FeImageLoader::cache_image )
+	// 	.Func( _SC("name_at"), &FeImageLoader::cache_get_name_at )
+	// 	.Func( _SC("size_at"), &FeImageLoader::cache_get_size_at )
+	// 	.Prop( _SC("bg_load"), &FeImageLoader::get_background_loading, &FeImageLoader::set_background_loading )
+	// );
 
 	// DEBUG
 	fe.Bind( _SC("AsyncLoader"), Class <FeAsyncLoader, NoConstructor>()
@@ -1107,8 +1106,8 @@ bool FeVM::on_new_layout()
 	fe.SetInstance( _SC("overlay"), this );
 	fe.SetInstance( _SC("ambient_sound"), &m_ambient_sound );
 
-	FeImageLoader &il = FeImageLoader::get_ref();
-	fe.SetInstance( _SC("image_cache"), &il );
+	// FeImageLoader &il = FeImageLoader::get_ref();
+	// fe.SetInstance( _SC("image_cache"), &il );
 
 	FeAsyncLoader &al = FeAsyncLoader::get_al();
 	fe.SetInstance( _SC("cache"), &al );

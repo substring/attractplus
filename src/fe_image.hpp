@@ -35,7 +35,6 @@ class FeText;
 class FeListBox;
 class FeRectangle;
 class FeTextureContainer;
-class FeImageLoaderEntry;
 
 enum FeVideoFlags
 {
@@ -225,7 +224,6 @@ private:
 	bool m_mipmap;
 	bool m_smooth;
 	float m_volume;
-	FeImageLoaderEntry *m_entry;
 };
 
 class FeSurfaceTextureContainer : public FeBaseTextureContainer, public FePresentableParent

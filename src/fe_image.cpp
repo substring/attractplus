@@ -27,7 +27,6 @@
 #include "fe_present.hpp"
 #include "fe_blend.hpp"
 #include "zip.hpp"
-#include "image_loader.hpp"
 #include "fe_async_loader.hpp"
 #include "path_cache.hpp"
 #include <cmath>
@@ -257,7 +256,6 @@ FeTextureContainer::FeTextureContainer(
 	m_mipmap( false ),
 	m_smooth( false ),
 	m_volume( 100.0 ),
-	m_entry( NULL ),
 	m_texture( &m_empty_texture )
 {
 	if ( is_artwork )
@@ -293,9 +291,6 @@ FeTextureContainer::~FeTextureContainer()
 
 bool FeTextureContainer::get_visible() const
 {
-	if ( m_entry )
-		return false;
-
 	return true;
 }
 
@@ -395,7 +390,6 @@ bool FeTextureContainer::try_to_load(
 #endif
 
 	FeAsyncLoader &al = FeAsyncLoader::get_al();
-	// FeImageLoader &il = FeImageLoader::get_ref();
 	unsigned char *data = NULL;
 
 	loaded_name = filename;
@@ -781,7 +775,6 @@ void FeTextureContainer::load_file( const char *n )
 	if( m_file_name == filename )
 		return;
 
-	FeAsyncLoader &al = FeAsyncLoader::get_al();
 	clear();
 	clear_texture();
 
