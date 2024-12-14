@@ -336,6 +336,7 @@ bool FeTextureContainer::load_with_ffmpeg(
 	}
 
 	m_movie = new FeMedia( FeMedia::AudioVideo );
+	m_texture = new sf::Texture; // TODO: not destroyed, memory leak?
 	res = m_movie->open( "", loaded_name, m_texture );
 
 	if ( !res )
@@ -771,6 +772,7 @@ int FeTextureContainer::get_video_time() const
 
 void FeTextureContainer::load_file( const char *n )
 {
+	// TODO: add support for relative paths that works with if( m_file_name == filename ) and cache
 	std::string filename = clean_path( n );
 
     std::replace( filename.begin(), filename.end(), '\\', '/' );
@@ -782,7 +784,7 @@ void FeTextureContainer::load_file( const char *n )
 	clear_texture();
 
 	if ( filename.empty() )
-		return;
+		return; // TODO: rearrange the logic?
 
 	if ( is_relative_path( filename ) )
 		filename = FePresent::script_get_base_path() + filename;
@@ -847,7 +849,8 @@ void FeTextureContainer::clear()
 	// If a movie is running, close it...
 	if ( m_movie )
 	{
-		m_movie->close();
+		// m_movie->close(); // TODO: Too slow 20ms
+		m_movie->signal_stop(); // TODO: fast but memory leak
 		m_movie=NULL;
 	}
 #endif
