@@ -406,6 +406,9 @@ bool FeTextureContainer::try_to_load(
 
 	// sf::Clock clk;
 	m_texture = al.get_resource_texture( loaded_name );
+	if ( m_mipmap ) m_texture->generateMipmap();
+	m_texture->setSmooth( m_smooth );
+
 	// FeLog() << "FeTextureContainer::try_to_load( " << filename << " ) took " << clk.getElapsedTime().asMicroseconds() << std::endl;
 
 	m_file_name = loaded_name;
