@@ -54,7 +54,7 @@ class FeAsyncLoaderEntryTexture : public FeAsyncLoaderEntryBase
 	friend class FeAsyncLoader;
 
 public:
-	static const EntryType type = TextureType;
+	static const EntryType type;
 	FeAsyncLoaderEntryTexture() : m_texture_size(0, 0) {};
 	~FeAsyncLoaderEntryTexture() {};
 
@@ -76,7 +76,7 @@ class FeAsyncLoaderEntryFont : public FeAsyncLoaderEntryBase
 	friend class FeAsyncLoader;
 
 public:
-	static const EntryType type = FontType;
+	static const EntryType type;
 	FeAsyncLoaderEntryFont() {};
 	~FeAsyncLoaderEntryFont() {};
 
@@ -94,7 +94,7 @@ class FeAsyncLoaderEntrySoundBuffer : public FeAsyncLoaderEntryBase
 	friend class FeAsyncLoader;
 
 public:
-	static const EntryType type = SoundBufferType;
+	static const EntryType type;
 	FeAsyncLoaderEntrySoundBuffer() {};
 	~FeAsyncLoaderEntrySoundBuffer() {};
 
