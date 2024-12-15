@@ -18,6 +18,10 @@
 #include <cstdio>
 #include <thread>
 
+const EntryType FeAsyncLoaderEntryTexture::type = TextureType;
+const EntryType FeAsyncLoaderEntryFont::type = FontType;
+const EntryType FeAsyncLoaderEntrySoundBuffer::type = SoundBufferType;
+
 // Destructor needs to be in the same compilation unit
 // so tmp_entry_ptr static_cast to derived will work
 FeAsyncLoaderEntryBase::~FeAsyncLoaderEntryBase() {};
