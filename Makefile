@@ -271,6 +271,16 @@ SFML_PKG_CONFIG_PATH=$(ROOT_DIR)/$(SFML_OBJ_DIR)/install/lib/pkgconfig
 LIBS += -L$(SFML_LIB_DIR)
 SFML_PC="sfml-system sfml-window sfml-audio sfml-graphics"
 SFML_TOKEN=$(SFML_OBJ_DIR)/.sfmlok
+SFML_TOKEN=$(SFML_OBJ_DIR)/.sfmlok
+SFML_CONFIGURATION=Release
+SFML_LIBS_SUFFFIX=
+ifeq ($(STATIC),1)
+  SFML_LIBS_SUFFFIX := -s
+endif
+ifeq ($(FE_DEBUG),1)
+ SFML_LIBS_SUFFFIX := $(SFML_LIBS_SUFFFIX)-d
+ SFML_CONFIGURATION=Debug
+endif
 
 
 ifeq ($(FE_MACOSX_COMPILE),1)
@@ -508,8 +518,8 @@ endif
 ifeq ($(FE_MACOSX_COMPILE),1)
 	$(eval SFML_FLAGS += -DSFML_USE_SYSTEM_DEPS=1)
 endif
-	$(SILENT)$(CMAKE) -S extlibs/SFML -B $(SFML_OBJ_DIR) -DCMAKE_INSTALL_PREFIX=$(SFML_OBJ_DIR)/install -DOpenGL_GL_PREFERENCE=GLVND -DSFML_INSTALL_PKGCONFIG_FILES=TRUE -DSFML_BUILD_NETWORK=FALSE $(SFML_FLAGS)
-	+$(SILENT)$(CMAKE) --build obj/sfml --config Release --target install
+	$(SILENT)$(CMAKE) -S extlibs/SFML -B $(SFML_OBJ_DIR) -DCMAKE_BUILD_TYPE=$(SFML_CONFIGURATION) -DCMAKE_INSTALL_PREFIX=$(SFML_OBJ_DIR)/install -DOpenGL_GL_PREFERENCE=GLVND -DSFML_INSTALL_PKGCONFIG_FILES=TRUE -DSFML_BUILD_NETWORK=FALSE $(SFML_FLAGS)
+	+$(SILENT)$(CMAKE) --build obj/sfml --config $(SFML_CONFIGURATION) --target install
 	touch $(SFML_TOKEN)
 endif
 else
@@ -521,7 +531,7 @@ sfml: sfmlbuild
 ifeq ($(STATIC),1)
 	$(eval SFML_LIBS += $(shell PKG_CONFIG_PATH$(PKG_CONFIG_MXE)="$(SFML_PKG_CONFIG_PATH):${PKG_CONFIG_PATH}" $(PKG_CONFIG) --static --libs-only-L $(SFML_PC)))
 	$(info Manually adding sfml libs as pkg-config has no --static version)
-	$(eval SFML_LIBS += -lsfml-graphics-s -lsfml-window-s -lsfml-audio-s -lsfml-system-s)
+	$(eval SFML_LIBS += -lsfml-graphics$(SFML_LIBS_SUFFFIX) -lsfml-window$(SFML_LIBS_SUFFFIX) -lsfml-audio$(SFML_LIBS_SUFFFIX) -lsfml-system$(SFML_LIBS_SUFFFIX))
 	$(eval CFLAGS += -DSFML_STATIC $(shell PKG_CONFIG_PATH$(PKG_CONFIG_MXE)="$(SFML_PKG_CONFIG_PATH):${PKG_CONFIG_PATH}" $(PKG_CONFIG) --static --cflags $(SFML_PC)))
 ifeq ($(FE_WINDOWS_COMPILE),1)
 else ifeq ($(FE_MACOSX_COMPILE),1)
