@@ -12,6 +12,7 @@
 #include "fe_base.hpp" // logging
 #include "fe_util.hpp"
 #include "fe_async_loader.hpp"
+#include "fe_present.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -21,6 +22,8 @@
 const EntryType FeAsyncLoaderEntryTexture::type = TextureType;
 const EntryType FeAsyncLoaderEntryFont::type = FontType;
 const EntryType FeAsyncLoaderEntrySoundBuffer::type = SoundBufferType;
+
+size_t FeAsyncLoader::m_cache_size = 0;
 
 // Destructor needs to be in the same compilation unit
 // so tmp_entry_ptr static_cast to derived will work
@@ -46,10 +49,27 @@ bool FeAsyncLoaderEntryBase::dec_ref()
 
 
 // FeAsyncLoader
+FeAsyncLoader *FeAsyncLoader::m_loader = nullptr;
+
 FeAsyncLoader &FeAsyncLoader::get_al()
 {
-	static FeAsyncLoader loader;
-	return loader;
+	if ( !m_loader )
+	{
+		FeLog() << "FeAsyncLoader::get_al() new m_loader" << std::endl;
+		m_loader = new FeAsyncLoader();
+	}
+
+	return *m_loader;
+}
+
+void FeAsyncLoader::clear()
+{
+	if ( m_loader )
+	{
+		FeLog() << "FeAsyncLoader::clear() delete m_loader" << std::endl;
+		delete m_loader;
+		m_loader = nullptr;
+	}
 }
 
 int FeAsyncLoader::get_cached_size()
@@ -88,7 +108,6 @@ int FeAsyncLoader::get_active_ref_count( int pos )
 
 void FeAsyncLoader::set_cache_size( size_t size )
 {
-	ulock_t lock( m_mutex );
 	m_cache_size = size;
 }
 
@@ -115,20 +134,17 @@ void FeAsyncLoader::notify()
 FeAsyncLoader::FeAsyncLoader()
 	: m_running( true ),
 	m_done( true ),
-	m_cache_size ( 0 ),
 	m_resources_active{},
 	m_resources_cached{},
 	m_resources_map{},
 	m_queue{}
 {
+	FeLog() << "FeAsyncLoader() Constructor" << std::endl;
 	m_thread = std::thread( &FeAsyncLoader::thread_loop, this );
 }
 
-FeAsyncLoader::~FeAsyncLoader()
-{
-	m_running = false;
-	m_condition.notify_one();
-	m_thread.join();
+FeAsyncLoader::~FeAsyncLoader() {
+	FeLog() << "~FeAsyncLoader() Destructor" << std::endl;
 
 	while ( !m_resources_active.empty() )
 	{
@@ -148,13 +164,18 @@ FeAsyncLoader::~FeAsyncLoader()
 
 	m_resources_map.clear();
 
+	// Stop and join the thread
+	m_running = false;
+	m_condition.notify_one();
+	m_thread.join();
 }
 
 void FeAsyncLoader::thread_loop()
 {
+	FeLog() << "FeAsyncLoader::thread_loop() STARTED" << std::endl;
 	sf::Context ctx;
 
-	while ( m_running )
+	while ( m_running ) // TODO: make it atomic m_running.load() ?
 	{
 		ulock_t lock( m_mutex );
 
@@ -172,6 +193,7 @@ void FeAsyncLoader::thread_loop()
 			lock.unlock();
 		}
 	}
+	FeLog() << "FeAsyncLoader::thread_loop() STOPPED" << std::endl;
 }
 
 #define _CRT_DISABLE_PERFCRIT_LOCKS
@@ -200,12 +222,10 @@ void FeAsyncLoader::load_resource( const std::string file, const EntryType type 
 template <typename T>
 void FeAsyncLoader::add_resource( const std::string input_file, bool async )
 {
-	// sf::Clock clk;
-	if ( input_file.empty() ) return;
+	std::string file = clean_path( input_file );
 
-    std::string file = input_file;
-    std::replace( file.begin(), file.end(), '\\', '/' );
-	// FeLog() << "FeAsyncLoader::add_resource( " << file << ", " << async << " )" << std::endl;
+	if ( is_relative_path( file ))
+		file = FePresent::script_get_base_path() + file;
 
 	ulock_t lock( m_mutex );
 	map_iterator_t it = m_resources_map.find( file );
@@ -220,34 +240,25 @@ void FeAsyncLoader::add_resource( const std::string input_file, bool async )
 		m_queue.push( std::make_pair( file, T::type ));
 		lock.unlock();
 		m_condition.notify_one();
-		// FeLog() << "add_resource() " << clk.getElapsedTime().asMicroseconds() << std::endl;
-		return;
-	}
-	else
-	{
-		// FeLog() << "FeAsyncLoader::add_resource( " << file << " ) already loaded" << std::endl;
-		// if ( it->second->second->get_ref() > 0 )
-		// 	if ( it->second->second->inc_ref() )
-				// Already in active list
-		return;
 	}
 }
 
 void FeAsyncLoader::add_resource_texture( const std::string file, bool async )
 {
+	// TODO: remove async from the script, always true?
 	// sf::Clock clk;
-    add_resource<FeAsyncLoaderEntryTexture>( file, async );
+	add_resource<FeAsyncLoaderEntryTexture>( file, async );
 	// FeLog() << clk.getElapsedTime().asMicroseconds() << std::endl;
 }
 
 void FeAsyncLoader::add_resource_font( const std::string file, bool async )
 {
-    add_resource<FeAsyncLoaderEntryFont>( file, async );
+	add_resource<FeAsyncLoaderEntryFont>( file, async );
 }
 
 void FeAsyncLoader::add_resource_sound( const std::string file, bool async )
 {
-    add_resource<FeAsyncLoaderEntrySoundBuffer>( file, async );
+	add_resource<FeAsyncLoaderEntrySoundBuffer>( file, async );
 }
 
 template <typename T>
@@ -255,7 +266,7 @@ T *FeAsyncLoader::get_resource( const std::string input_file )
 {
 	// sf::Clock clk;
 	std::string file = input_file;
-    std::replace( file.begin(), file.end(), '\\', '/' );
+	std::replace( file.begin(), file.end(), '\\', '/' );
 
 	// FeLog() << "FeAsyncLoader::get_resource( " << file << " )" << std::endl;
 	map_iterator_t it = m_resources_map.find( file );

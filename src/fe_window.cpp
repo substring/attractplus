@@ -27,6 +27,7 @@
 #include "fe_settings.hpp"
 #include "fe_window.hpp"
 #include "fe_present.hpp"
+#include "fe_async_loader.hpp"
 
 #ifdef SFML_SYSTEM_WINDOWS
 #define WIN32_LEAN_AND_MEAN
@@ -154,6 +155,8 @@ void FeWindow::initial_create()
 {
 	if ( !m_window )
 		m_window = new sf::RenderWindow();
+
+	FeAsyncLoader::get_al();
 
 	int style_map[4] =
 	{
@@ -696,8 +699,20 @@ sf::RenderWindow &FeWindow::get_win()
 
 void FeWindow::close()
 {
+	FeLog() << "FeWindow::close()" << std::endl;
 	if ( m_window )
+	{
+		FeLog() << "FeWindow::close() AsyncLoader clear()" << std::endl;
+		FeAsyncLoader::get_al().clear();
+		FeLog() << "FeWindow::close() m_window->close()" << std::endl;
 		m_window->close();
+		// if ( m_window )
+		// {
+		// 	m_window->setActive( false );
+		// 	delete m_window;
+		// 	m_window = NULL;
+		// }
+	}
 }
 
 bool FeWindow::hasFocus()

@@ -697,8 +697,6 @@ void FeSettings::init_display()
 	// the display (which happens when settings get changed for example)
 	//
 	construct_display_maps();
-
-	FePathCache::clear();
 }
 
 void FeSettings::construct_display_maps()
@@ -3117,10 +3115,7 @@ bool FeSettings::set_info( int index, const std::string &value )
 			m_image_cache_mbytes = 0;
 
 		FeDebug() << "Setting image cache size to " << m_image_cache_mbytes << " MBytes." << std::endl;
-		{
-			FeAsyncLoader &al = FeAsyncLoader::get_al();
-			al.set_cache_size( m_image_cache_mbytes * 1024 * 1024 );
-		}
+		FeAsyncLoader::set_cache_size( m_image_cache_mbytes * 1024 * 1024 );
 		break;
 
 	case MoveMouseOnLaunch:
