@@ -126,7 +126,7 @@ std::map<std::string, int>& FePathCache::get_cache( const std::string& full_path
 	}
 
 	m_cache.insert( std::make_pair( path, temp ));
-	FeLog() << "Caching " << path << " took " << clk.getElapsedTime().asMicroseconds() << "us" << std::endl;
+	// FeLog() << "Caching " << path << " took " << clk.getElapsedTime().asMicroseconds() << "us" << std::endl;
 	return m_cache[ path ];
 }
 
