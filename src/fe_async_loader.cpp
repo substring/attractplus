@@ -54,10 +54,7 @@ FeAsyncLoader *FeAsyncLoader::m_loader = nullptr;
 FeAsyncLoader &FeAsyncLoader::get_al()
 {
 	if ( !m_loader )
-	{
-		FeLog() << "FeAsyncLoader::get_al() new m_loader" << std::endl;
 		m_loader = new FeAsyncLoader();
-	}
 
 	return *m_loader;
 }
@@ -66,7 +63,6 @@ void FeAsyncLoader::clear()
 {
 	if ( m_loader )
 	{
-		FeLog() << "FeAsyncLoader::clear() delete m_loader" << std::endl;
 		delete m_loader;
 		m_loader = nullptr;
 	}
@@ -139,12 +135,11 @@ FeAsyncLoader::FeAsyncLoader()
 	m_resources_map{},
 	m_queue{}
 {
-	FeLog() << "FeAsyncLoader() Constructor" << std::endl;
 	m_thread = std::thread( &FeAsyncLoader::thread_loop, this );
 }
 
-FeAsyncLoader::~FeAsyncLoader() {
-	FeLog() << "~FeAsyncLoader() Destructor" << std::endl;
+FeAsyncLoader::~FeAsyncLoader()
+{
 
 	while ( !m_resources_active.empty() )
 	{
@@ -172,7 +167,6 @@ FeAsyncLoader::~FeAsyncLoader() {
 
 void FeAsyncLoader::thread_loop()
 {
-	FeLog() << "FeAsyncLoader::thread_loop() STARTED" << std::endl;
 	sf::Context ctx;
 
 	while ( m_running ) // TODO: make it atomic m_running.load() ?
@@ -193,7 +187,6 @@ void FeAsyncLoader::thread_loop()
 			lock.unlock();
 		}
 	}
-	FeLog() << "FeAsyncLoader::thread_loop() STOPPED" << std::endl;
 }
 
 #define _CRT_DISABLE_PERFCRIT_LOCKS

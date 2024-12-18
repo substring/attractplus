@@ -699,20 +699,10 @@ sf::RenderWindow &FeWindow::get_win()
 
 void FeWindow::close()
 {
-	FeLog() << "FeWindow::close()" << std::endl;
 	if ( m_window )
 	{
-		FeLog() << "FeWindow::close() AsyncLoader clear()" << std::endl;
 		FeAsyncLoader::get_al().clear();
-		FeLog() << "FeWindow::close() m_window->close()" << std::endl;
 		m_window->close();
-		if ( m_window )
-		{
-			FeLog() << "FeWindow::close() delete m_window !!!!!!!!!!!!!!!!" << std::endl;
-			m_window->setActive( false );
-			delete m_window;
-			m_window = NULL;
-		}
 	}
 }
 
