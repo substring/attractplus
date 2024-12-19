@@ -140,6 +140,15 @@ FeWindow::~FeWindow()
 
 void FeWindow::display()
 {
+	m_player_texture->setActive( true );
+	m_player->renderVideo();
+	m_player_texture->display();
+
+	sf::Sprite sprite( m_player_texture->getTexture() );
+	sprite.setScale( 1.0f, 1.0f );
+	m_window->draw( sprite );
+
+	m_window->setActive(false);
 	m_window->display();
 
 	// Starting from Windows Vista all non fullscreen window modes
@@ -355,6 +364,18 @@ void FeWindow::initial_create()
 	ctx.antialiasingLevel = m_fes.get_antialiasing();
 
 	m_window->create( vm, "Attract-Mode Plus", style_map[ m_win_mode ], ctx );
+
+
+	m_player_texture = new sf::RenderTexture();
+	m_player_texture->create( 224, 288 );
+
+	m_player = new Player();
+	m_player->setVideoSurfaceSize( 224, 288 );
+	m_player->setMedia( "/home/arcade/.attract/test.mp4" );
+	m_player->prepare();
+	m_player->setAudioBackends({"ALSA"});
+	// m_player->setVolume( 0 );
+	m_player->set( State::Playing );
 
 	// On Windows Vista and above all non fullscreen window modes
 	// go through DWM. We have to disable vsync
@@ -701,6 +722,12 @@ void FeWindow::close()
 {
 	if ( m_window )
 	{
+		delete m_player;
+		m_player = NULL;
+
+		delete m_player_texture;
+		m_player_texture = NULL;
+
 		FeAsyncLoader::get_al().clear();
 		m_window->close();
 	}

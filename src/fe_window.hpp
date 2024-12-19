@@ -24,6 +24,10 @@
 #define FE_WINDOW_HPP
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
+
+#include "mdk/Player.h"
+using namespace MDK_NS;
 
 class FeSettings;
 
@@ -43,6 +47,8 @@ private:
 	sf::RenderWindow m_blackout;
 #endif
 	int m_win_mode;
+	Player *m_player;
+	sf::RenderTexture *m_player_texture;
 
 public:
 	FeWindow( FeSettings &fes );
