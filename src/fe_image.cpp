@@ -866,9 +866,12 @@ bool FeTextureContainer::get_repeat() const
 
 void FeTextureContainer::set_volume( float v )
 {
+	if ( v == m_volume ) return;
+
 	if ( v < 0.0 ) v = 0.0;
 	if ( v > 100.0 ) v = 100.0;
 	m_volume = v;
+	set_vol( v );
 }
 
 float FeTextureContainer::get_volume() const
