@@ -1762,6 +1762,7 @@ Properties:
      The default value is `false`.  It's advised to force anisotropic filtering in
      the display driver settings if the Image with auto generated mipmap is scaled
      by the ratio that is not isotropic.
+   * `volume` 🔶 Get/set the volume of played video. Range is [0 ... 100]
    * `repeat` 🔶 Enables texture repeat when set to true. Default value is false.
      To see the effect `subimg_width/height` must be set larger than `texture_width/height`
    * `clear` 🔶 [surface only] When set to false surface is not cleared
