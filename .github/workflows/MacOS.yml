@@ -14,7 +14,7 @@ on:
 
 # This is only for SFML2, shall be removed when bumping to SFML3
 env:
-  PKG_CONFIG_PATH: "/opt/homebrew/opt/sfml@2/lib/pkgconfig:/opt/homebrew/opt/openal-soft/lib/pkgconfig"
+  PKG_CONFIG_PATH: "/opt/homebrew/opt/openal-soft/lib/pkgconfig"
 
 jobs:
 
