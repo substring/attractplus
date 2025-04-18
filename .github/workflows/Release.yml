@@ -16,8 +16,8 @@ jobs:
     strategy:
       matrix:
         platform:
-        - { name: Linux x64 KMS, targetos: linux-x86, amflags: USE_DRM=1 }
-        #- { name: Linux x64 X11, targetos: linux-x86 }
+        - { name: Linux x64 KMS, targetos: linux-x86, video=KMS, amflags: USE_DRM=1 }
+        - { name: Linux x64 X11, targetos: linux-x86, video=X11 }
         config:
         - { name: shared, amflags: STATIC=0 }
         - { name: static, amflags: STATIC=1 }
@@ -42,6 +42,7 @@ jobs:
         [[ ${GITHUB_REF} =~ ^refs/tags/* ]] && fe_version="${GITHUB_REF#refs/*/}"
         echo "fe_version=${fe_version}" >> $GITHUB_OUTPUT
         echo "deb_version=${deb_version}" >> $GITHUB_OUTPUT
+        [[ "${{ matrix.platform.video }}" == "X11 ]] && sed -i 's/USE_DRM=1//' debian/rules
 
     - name: Package AM+
       uses: jtdor/build-deb-action@v1
@@ -55,7 +56,7 @@ jobs:
       run: |
         find ./ -name '*.deb'
         version="$(head -1 am/debian/changelog | egrep -o "[0-9]+\.[0-9]+\.[0-9]+")"
-        cp "./debian/artifacts/attractplus_${version}_amd64.deb" "attractplus_${version}_${{ matrix.os }}_amd64.deb"
+        cp "./debian/artifacts/attractplus_${version}_amd64.deb" "attractplus_${version}_${{ matrix.os }}_${{ matrix.platform.video }}_amd64.deb"
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
