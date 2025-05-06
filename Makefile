@@ -66,6 +66,7 @@ override FE_VERSION := v3.1.0
 CC ?= gcc
 CXX ?= g++
 CFLAGS = $(EXTRA_CFLAGS)
+LDFLAGS = $(EXTRA_LDFLAGS)
 STRIP ?= strip
 PKG_CONFIG ?= pkg-config
 AR ?= ar
@@ -241,6 +242,9 @@ ifneq ($(FE_WINDOWS_COMPILE),1)
    _OBJ += fe_util_osx.o
    override B64FLAGS = -b 0 -i
    LIBS += -framework Cocoa -framework Carbon -framework IOKit -framework CoreVideo -framework OpenAL
+   ifeq ($(STATIC), 1)
+   LDFLAGS += -ObjC
+   endif
   else
    ifeq ($(USE_DRM),1)
    else
@@ -472,7 +476,7 @@ $(OBJ_DIR)/%.h: % | $(RES_FONTS_DIR) $(RES_IMGS_DIR)
 
 $(EXE): $(OBJ) $(EXPAT) $(SQUIRREL)
 	$(EXE_MSG)
-	$(SILENT)$(CXX) -o $@ $(SFML_OBJ) $^ $(CFLAGS) $(FE_FLAGS) $(LIBS)
+	$(SILENT)$(CXX) -o $@ $(SFML_OBJ) $(LDFLAGS) $^ $(CFLAGS) $(FE_FLAGS) $(LIBS)
 ifneq ($(FE_DEBUG),1)
 	$(SILENT)$(STRIP) $@
 endif
