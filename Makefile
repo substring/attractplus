@@ -348,6 +348,13 @@ else
   LIBS += $(shell $(PKG_CONFIG) --libs $(SDL3_IMAGE_PKG))
 endif
 
+# Don't rely on MXE various image libs, use vendored ones
+ifneq ($(HAS_SDL3_IMAGE),1)
+  ifeq ($(FE_WINDOWS_COMPILE),1)
+    $(shell $(EXTLIBS_DIR)/sdl3-image/external/download.sh)
+  endif
+endif
+
 ifneq ($(HAS_SDL3),1)
   $(info sdl3 will be built with AM+)
   ifeq ($(HAS_SDL3_IMAGE),1)
