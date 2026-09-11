@@ -26,7 +26,7 @@ jobs:
         - { name: shared, amflags: STATIC=0 }
         - { name: static, amflags: STATIC=1 }
         video: [ X11, KMS ]
-        os: [ bullseye, bookworm ]
+        os: [ trixie, bookworm ]
         exclude:
           - config: { name: shared }
 
